@@ -172,12 +172,19 @@
       .sd-scale input[type="radio"]{width:20px;height:20px}
 
       /* 指示どおり82% + 1.2%余白 */
-      .ecx-slide{flex-basis:82%; margin:0 1.2%}
-      .ecx-card{aspect-ratio:16/9}
-      .ecx-arrow{width:38px;height:38px;font-size:24px}
+      .ecx-carousel {position: relative;width: 100%;overflow: hidden;}
+      .ecx-viewport {width: 100%;overflow: hidden;}
+      .ecx-track { display: flex;align-items: center; transition: transform 0.5s ease;will-change: transform;}
+      .ecx-slide{flex:0 0 82%; margin:0 1.2%;box-sizing:border-box;}
+      .ecx-card img{aspect-ratio:16/9;overflow:hidden;border-radius: 20px;}
+      .ecx-arrow{position:absolute;top:50%;transform:translateY(-50%);z-index:10;width:38px;height:38px;border:none; border-radius: 50%;background:white;font-size:24px;cursor:pointer;}}
       .ecx-arrow.ecx-prev{left:1%}
       .ecx-arrow.ecx-next{right:1%}
-      .ecx-dot{width:8px;height:8px}
+      .ecx-dots {display: flex;justify-content: center;align-items: center;gap: 8px;margin-top: 14px;}
+      .ecx-dots button {appearance: none;-webkit-appearance: none; width: 8px !important;height: 8px !important;min-width: 8px !important;
+        min-height: 8px !important;padding: 0 !important;margin: 0 !important;border: none !important; 
+        border-radius: 50% !important;background: #c8c8c8;box-shadow: none;cursor: pointer;}
+      .ecx-dots button.active { width: 8px !important; height: 8px !important; background: #222;}
     }
   </style>
 </head>
@@ -197,10 +204,10 @@
             <button class="ecx-arrow ecx-prev" id="ecx-prev" aria-label="前へ">‹</button>
             <div class="ecx-viewport" id="ecx-viewport">
               <div class="ecx-track" id="ecx-track">
-                <!-- ① 正しいimg src形式 -->
-                <div class="ecx-slide"><div class="ecx-card"><img src="gazou1.jpg" alt="カルーセル画像1"></div></div>
-                <div class="ecx-slide"><div class="ecx-card"><img src="gazou2.jpg" alt="カルーセル画像2"></div></div>
-                <div class="ecx-slide"><div class="ecx-card"><img src="gazou3.jpg" alt="カルーセル画像3"></div></div>
+
+                <div class="ecx-slide"><div class="ecx-card"><img src="images/gazou1.jpg" alt="カルーセル画像1"></div></div>
+                <div class="ecx-slide"><div class="ecx-card"><img src="images/gazou2.jpg" alt="カルーセル画像2"></div></div>
+                <div class="ecx-slide"><div class="ecx-card"><img src="images/gazou3.jpg" alt="カルーセル画像3"></div></div>
               </div>
             </div>
             <button class="ecx-arrow ecx-next" id="ecx-next" aria-label="次へ">›</button>
@@ -295,7 +302,6 @@
       <div class="final-msg" id="final-msg">回答を送信しました。ご協力ありがとうございました。</div>
     </main>
 
-    <footer>※ローカル実行用HTML（単体で動作）</footer>
   </div>
 
   <div class="points-panel" id="points-panel">
