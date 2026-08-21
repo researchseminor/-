@@ -7,7 +7,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
   <style>
     :root{
-      --color1:#fffaed; --color2:#111; --color3:#CFCECA;
+      --color1:#f1f0f0; --color2:#111; --color3:#CFCECA;
       --bg:#fff; --text:#111; --radius:8px;
       font-family:'Noto Sans JP',sans-serif;
     }
@@ -15,7 +15,7 @@
     body{margin:0;background:var(--color3);color:var(--text)}
     .wrap{max-width:980px;margin:24px auto;background:var(--bg);padding:20px;border-radius:10px;box-shadow:0 4px 14px rgba(0,0,0,.06)}
     header{display:flex;align-items:center;justify-content:space-between;gap:12px}
-    h1{background:var(--color1);box-shadow:0 0 0 2px #111 inset;padding:.4em .7em;margin:0;font-size:20px}
+    h1{padding:.2em 0;margin:0;font-size:24px;font-weight:700;background:none;box-shadow:none;}
     h2{margin:8px 0 12px}
     h3{margin:0 0 10px}
     button{background:var(--color2);color:#fff;border:none;padding:10px 14px;border-radius:6px;cursor:pointer;font-weight:700}
@@ -31,18 +31,64 @@
     .view{display:none}
     .view.active{display:block}
 
-    .start-area{text-align:center;padding:16px 10px 30px;border-radius:var(--radius)}
-    .start-area button{font-size:20px;padding:14px 26px}
-    .start-hero{
+    .start-area{text-align:center;padding:8px 0 16px;border-radius:var(--radius)}
+    .start-area button{font-size:20px;padding:14px 26px;margin-top:14px}
+
+    /* ===== 専用カルーセル ===== */
+    .ecx-carousel{
       width:100%;
-      height:220px;
-      object-fit:cover;
-      border-radius:10px;
-      margin-bottom:16px;
-      box-shadow:0 4px 12px rgba(0,0,0,.08);
-      background:#eee;
-      display:block;
+      margin:0 auto 10px;
+      position:relative;
+      overflow:hidden;
+      padding:16px 0 26px;
+      user-select:none;
     }
+    .ecx-viewport{overflow:hidden;width:100%}
+    .ecx-track{
+      display:flex;align-items:center;
+      will-change:transform;transition:transform .55s ease;
+    }
+
+    /* PC基準 */
+    .ecx-slide{
+      flex:0 0 76%;
+      margin:0 1.5%;
+      transform:scale(.78);
+      opacity:.58;
+      transition:transform .55s ease, opacity .55s ease;
+    }
+    .ecx-slide.ecx-active{transform:scale(1);opacity:1}
+    .ecx-card{
+      width:100%;border-radius:24px;overflow:hidden;background:#ececec;
+      box-shadow:0 8px 24px rgba(0,0,0,.12);aspect-ratio:16 / 7.4;
+    }
+    .ecx-card img{
+      width:100%;
+      height:100%;
+      display:block;
+      object-fit:cover;
+      object-position:center;
+    }
+
+    .ecx-arrow{
+      position:absolute;top:50%;transform:translateY(-58%);
+      width:42px;height:42px;border-radius:50%;background:rgba(255,255,255,.95);color:#222;border:none;
+      box-shadow:0 3px 10px rgba(0,0,0,.12);font-size:28px;line-height:1;cursor:pointer;
+      display:flex;align-items:center;justify-content:center;z-index:10;
+    }
+    .ecx-arrow.ecx-prev{left:2.4%}
+    .ecx-arrow.ecx-next{right:2.4%}
+
+    /* ドット: 8px & gap 8px */
+    .ecx-dots{
+      position:absolute;left:50%;bottom:0;transform:translateX(-50%);
+      display:flex;gap:8px;align-items:center;justify-content:center;
+    }
+    .ecx-dot{
+      width:8px;height:8px;border-radius:50%;
+      border:none;background:#c7c7c7;cursor:pointer;padding:0;
+    }
+    .ecx-dot.ecx-active{background:#1f1f1f}
 
     .points-panel{
       position:fixed;inset:0;background:#fff;display:none;align-items:center;justify-content:center;z-index:1000
@@ -88,43 +134,50 @@
     .field input[type="text"]{
       width:100%;padding:10px;border:2px solid #111;border-radius:6px;font-size:16px;background:#fff;
     }
+
     .radio-row{display:flex;gap:14px;flex-wrap:wrap}
-    .radio-row label{display:inline-flex;align-items:center;gap:6px}
+    .radio-row label{
+      display:inline-flex;align-items:center;gap:8px;
+      border:1px solid #111;border-radius:999px;padding:10px 14px;
+      background:#fff;font-size:16px;font-weight:700;cursor:pointer;
+    }
+    .radio-row input[type="radio"]{width:20px;height:20px;accent-color:#111}
 
     .sd-block{margin:18px 0;padding:12px;border:1px solid #111;border-radius:8px;background:#fff}
     .sd-title{font-weight:700;margin-bottom:8px}
-    .sd-scale-wrap{
-      display:grid;
-      grid-template-columns:max-content auto max-content;
-      align-items:center;
-      gap:6px; /* 文とボタンを近づける */
-    }
+    .sd-scale-wrap{display:grid;grid-template-columns:max-content auto max-content;align-items:center;gap:6px}
     .sd-left,.sd-right{font-size:13px;color:#444;white-space:nowrap}
     .sd-scale{display:flex;gap:4px;align-items:center;justify-content:center}
     .sd-scale label{
       display:flex;flex-direction:column;align-items:center;gap:2px;
-      font-size:12px;min-width:36px;cursor:pointer; /* 広め */
-      padding:4px 2px;
+      font-size:12px;min-width:36px;cursor:pointer;padding:4px 2px;
     }
-    .sd-scale input[type="radio"]{
-      width:20px;height:20px; /* ボタン大きく */
-      accent-color:#111;
-    }
+    .sd-scale input[type="radio"]{width:20px;height:20px;accent-color:#111}
 
-    #submit-survey{
-      width:100%;
-      font-size:18px;
-      padding:14px 18px;
-      border-radius:10px;
-    }
-
+    #submit-survey{width:100%;font-size:18px;padding:14px 18px;border-radius:10px}
     .final-msg{display:none;padding:18px;text-align:center;font-weight:700;margin-top:16px}
     footer{margin-top:20px;text-align:right;color:#666;font-size:13px}
 
     @media (max-width:720px){
       .categories{grid-template-columns:1fr}
-      .sd-scale-wrap{grid-template-columns:1fr}
-      .sd-left,.sd-right{text-align:center}
+      .sd-scale-wrap{grid-template-columns:1fr;gap:4px}
+      .sd-scale-wrap .sd-left,.sd-scale-wrap .sd-right{display:none}
+      .sd-scale-wrap::before{
+        content: attr(data-mobile-lr);
+        display:block;text-align:center;font-size:12px;line-height:1.2;
+        white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#444;
+      }
+      .sd-scale{justify-content:space-between;gap:2px}
+      .sd-scale label{min-width:28px;padding:2px 0;font-size:10px}
+      .sd-scale input[type="radio"]{width:20px;height:20px}
+
+      /* 指示どおり82% + 1.2%余白 */
+      .ecx-slide{flex-basis:82%; margin:0 1.2%}
+      .ecx-card{aspect-ratio:16/9}
+      .ecx-arrow{width:38px;height:38px;font-size:24px}
+      .ecx-arrow.ecx-prev{left:1%}
+      .ecx-arrow.ecx-next{right:1%}
+      .ecx-dot{width:8px;height:8px}
     }
   </style>
 </head>
@@ -133,15 +186,26 @@
 
   <div class="wrap" id="app">
     <header>
-      <h1>🛒 架空EC実験</h1>
+      <h1>架空EC実験</h1>
       <div class="muted">実験ページ</div>
     </header>
 
     <main>
       <section id="view-start" class="view active">
         <div class="start-area">
-          <img src="start.jpg" alt="実験イメージ画像" class="start-hero" onerror="this.style.display='none'">
-          <p>スタートボタンを押すと実験が始まります。</p>
+          <div class="ecx-carousel" id="ecx-carousel">
+            <button class="ecx-arrow ecx-prev" id="ecx-prev" aria-label="前へ">‹</button>
+            <div class="ecx-viewport" id="ecx-viewport">
+              <div class="ecx-track" id="ecx-track">
+                <!-- ① 正しいimg src形式 -->
+                <div class="ecx-slide"><div class="ecx-card"><img src="gazou1.jpg" alt="カルーセル画像1"></div></div>
+                <div class="ecx-slide"><div class="ecx-card"><img src="gazou2.jpg" alt="カルーセル画像2"></div></div>
+                <div class="ecx-slide"><div class="ecx-card"><img src="gazou3.jpg" alt="カルーセル画像3"></div></div>
+              </div>
+            </div>
+            <button class="ecx-arrow ecx-next" id="ecx-next" aria-label="次へ">›</button>
+            <div class="ecx-dots" id="ecx-dots"></div>
+          </div>
           <button id="start-btn" type="button">スタート</button>
         </div>
       </section>
@@ -199,7 +263,7 @@
 
         <div class="sd-block">
           <div class="sd-title">Q1：現在の温度、湿度の環境はどれくらい不快ですか？（不快環境：蒸し暑いなど）</div>
-          <div class="sd-scale-wrap">
+          <div class="sd-scale-wrap" data-mobile-lr="非常に快適 ←→ 非常に不快">
             <div class="sd-left">非常に快適</div>
             <div class="sd-scale" id="q1-scale"></div>
             <div class="sd-right">非常に不快</div>
@@ -218,7 +282,7 @@
 
         <div class="sd-block">
           <div class="sd-title">Q4：今回の商品選択の満足度を回答してください。</div>
-          <div class="sd-scale-wrap">
+          <div class="sd-scale-wrap" data-mobile-lr="全く満足していない ←→ 非常に満足している">
             <div class="sd-left">全く満足していない</div>
             <div class="sd-scale" id="q4-scale"></div>
             <div class="sd-right">非常に満足している</div>
@@ -264,166 +328,124 @@
 
   <script>
     const CATEGORIES = [
-      { 
-        id: 'kitchen', 
-        name: 'キッチン用品', 
-        imageUrl: 'kitchen.jpg',
-        subcategories:[
-          { name: '皿・プレート',imageUrl:'sarap.jpg', products: [
-            { name: '皿', price: 330, imageUrl: 'sara.jpg' },
-            { name: 'プレート', price: 550, imageUrl: 'prate.jpg' },
-            { name: 'お子様プレート', price: 550, imageUrl: 'kidsp.jpg' }
-          ]},
-          { name: 'グラス・カップ',imageUrl:'glass.jpg', products: [
-            { name: 'マグカップ（ホワイト）', price: 330, imageUrl: 'magw.jpg' },
-            { name: 'マグカップ（ブラック）', price: 330, imageUrl: 'magb.jpg' },
-            { name: '透明グラス', price: 330, imageUrl: 'glass.jpg' },
-            { name: 'ワイングラス', price: 660, imageUrl: 'wine.jpg' }
-          ]},
-          { name: '箸・カトラリー',imageUrl:'chopcat.jpg', products: [
-            { name: '箸（4膳）', price: 330, imageUrl: 'chop.jpg' },
-            { name: '箸（2膳）', price: 160, imageUrl: 'chop.jpg' },
-            { name: 'カトラリーセット1人分', price: 330, imageUrl: 'cat.jpg' }
-          ]},
-          { name: 'ランチボックス',imageUrl:'lunch.jpg', products: [
-            { name: 'ランチボックス', price: 550, imageUrl: 'lunchb.jpg' },
-            { name: '2段ランチボックス', price: 770, imageUrl: 'lunch2.jpg' },
-            { name: 'わっぱ風ランチボックス', price: 770, imageUrl: 'lunchw.jpg' }
-          ]},
-          { name: '水筒・タンブラー',imageUrl:'water.jpg', products: [
-            { name: '水筒（ホワイト）', price: 880, imageUrl: 'suitow.jpg' },
-            { name: '水筒（ブラック）', price: 880, imageUrl: 'suitob.jpg' },
-            { name: 'タンブラー（ホワイト）', price: 660, imageUrl: 'tamw.jpg' },
-            { name: 'タンブラー（ブラック）', price: 660, imageUrl: 'tamb.jpg' }
-          ]},
-          { name: '容器・ボウル',imageUrl:'bowl.jpg', products: [
-            { name: '保存容器', price: 660, imageUrl: 'hyouki.jpg' },
-            { name: 'ボウル', price: 330, imageUrl: 'bowl.jpg' },
-            { name: 'ざる', price: 330, imageUrl: 'zaru.jpg' }
-          ]},
-          { name: 'コースター・ランチョンマット',imageUrl:'coasterlunch.jpg', products: [
-            { name: 'カップコースター', price: 330, imageUrl: 'coster.jpg' },
-            { name: 'ランチョンマット', price: 330, imageUrl: 'lunchm.jpg' }
-          ]}
-        ],
-      },
-      { 
-        id: 'shuno', 
-        name: '収納', 
-        imageUrl: 'shuno.jpg',
-        subcategories:[
-          { name: '収納ボックス',imageUrl:'tool.jpg', products: [
-            { name: 'S', price: 550, imageUrl: 'box.jpg' },
-            { name: 'M', price: 880, imageUrl: 'box.jpg' },
-            { name: 'L', price: 1320, imageUrl: 'box.jpg' }
-          ]},
-          { name: 'バスケット・カゴ',imageUrl:'tool.jpg', products: [
-            { name: 'バスケット', price: 1320, imageUrl: 'busket.jpg' },
-            { name: 'カゴ', price: 1100, imageUrl: 'kago.jpg' }
-          ]},
-          { name: 'ラック',imageUrl:'tool.jpg', products: [
-            { name: 'ラック（ホワイト）', price: 330, imageUrl: 'luckw.jpg' },
-            { name: 'ラック（ブラック）', price: 330, imageUrl: 'luckb.jpg' }
-          ]},
-          { name: 'ハンガー',imageUrl:'tool.jpg', products: [
-            { name: 'ハンガー（4本）', price: 550, imageUrl: 'hung4.jpg' },
-            { name: 'ハンガー（6本）', price: 660, imageUrl: 'hung6.jpg' },
-            { name: 'ピンチハンガー（ピンチ6つ）', price: 700, imageUrl: 'phung.jpg' },
-            { name: 'ピンチハンガー（ピンチ8つ）', price: 800, imageUrl: 'phung.jpg' }
-          ]},
-          { name: 'アクセサリートレー',imageUrl:'tool.jpg', products: [
-            { name: 'アクササリートレー（ホワイト）', price: 330, imageUrl: 'torew.jpg' },
-            { name: 'アクセサリートレー（ウッド）', price: 330, imageUrl: 'torewo.jpg' }
-          ]}
-        ]
-      },
-      { 
-        id: 'interia', 
-        name: 'インテリア', 
-        imageUrl: 'interia.jpg',
-        subcategories:[
-          { name: 'カーテン',imageUrl:'tool.jpg', products: [
-            { name: 'ミニカーテン（ホワイト）', price: 550, imageUrl: 'katenw.jpg' },
-            { name: 'ミニカーテン（グレー）', price: 550, imageUrl: 'kateng.jpg' },
-          ]},
-          { name: '時計',imageUrl:'tool.jpg', products: [
-            { name: '時計（ホワイト）', price: 770, imageUrl: 'fpan.jpg' },
-            { name: '時計（ブラック）', price: 770, imageUrl: 'nabe.jpg' }
-          ]}
-        ]
-      },
-      { 
-        id: 'fashion', 
-        name: 'ファッション雑貨・小物', 
-        imageUrl: 'fashion.jpg',
-        subcategories:[
-          { name: 'ファッション雑貨',imageUrl:'tool.jpg', products: [
-            { name: 'ベルト', price: 330, imageUrl: 'belt.jpg' },
-            { name: 'サングラス', price: 1100, imageUrl: 'sunglass.jpg' },
-            { name: 'めがね', price: 550, imageUrl: 'glass.jpg' },
-            { name: '帽子', price: 1320, imageUrl: 'cap.jpg' },
-            { name: 'マスク', price: 330, imageUrl: 'mask.jpg' }
-          ]},
-          { name: '傘',imageUrl:'tool.jpg', products: [
-            { name: '傘', price: 2420, imageUrl: 'kasa.jpg' },
-            { name: '財布', price: 330, imageUrl: 'saihu.jpg' },
-            { name: 'コインケース', price: 330, imageUrl: 'coin.jpg' },
-            { name: 'ハンカチ', price: 330, imageUrl: 'hankachi.jpg' },
-            { name: 'ポーチ', price: 660, imageUrl: 'pouch.jpg' },
-            { name: 'パスケース', price: 330, imageUrl: 'passcase.jpg' }
-          ]}
-        ]
-      },
-      { 
-        id: 'device', 
-        name: '家電・デバイス', 
-        imageUrl: 'device.jpg',
-        subcategories:[
-          { name: '電池',imageUrl:'tool.jpg', products: [
-            { name: '単3', price: 140, imageUrl: 'tan3.jpg' },
-            { name: '単４', price: 140, imageUrl: 'tan3.jpg' },
-            { name: 'ボタン電池', price: 130, imageUrl: 'botan.jpg' }
-          ]},
-          { name: '照明',imageUrl:'tool.jpg', products: [
-            { name: 'ライト（ホワイト）', price: 330, imageUrl: 'lightw.jpg' },
-            { name: 'ライト（ブラック）', price: 330, imageUrl: 'lightb.jpg' },
-            { name: 'ランプシェード', price: 880, imageUrl: 'lampshade.jpg' }
-          ]},
-          { name: 'イヤホン',imageUrl:'tool.jpg', products: [
-            { name: '有線イヤホン（ホワイト）', price: 550, imageUrl: 'yusenw.jpg' },
-            { name: 'Bluetoothイヤホン（ホワイト）', price: 2200, imageUrl: 'bluetoothw.jpg' },
-            { name: 'ヘッドフォン（ホワイト）', price: 3850, imageUrl: 'headphonew.jpg' }
-          ]}
-        ] 
-      }
+      { id:'kitchen', name:'キッチン用品', imageUrl:'kitchen.jpg', subcategories:[
+        { name:'皿・プレート', imageUrl:'sarap.jpg', products:[
+          { name:'皿', price:330, imageUrl:'sara.jpg' },
+          { name:'プレート', price:550, imageUrl:'prate.jpg' },
+          { name:'お子様プレート', price:550, imageUrl:'kidsp.jpg' }
+        ]},
+        { name:'グラス・カップ', imageUrl:'glass.jpg', products:[
+          { name:'マグカップ（ホワイト）', price:330, imageUrl:'magw.jpg' },
+          { name:'マグカップ（ブラック）', price:330, imageUrl:'magb.jpg' },
+          { name:'透明グラス', price:330, imageUrl:'glass.jpg' },
+          { name:'ワイングラス', price:660, imageUrl:'wine.jpg' }
+        ]},
+        { name:'箸・カトラリー', imageUrl:'chopcat.jpg', products:[
+          { name:'箸（4膳）', price:330, imageUrl:'chop.jpg' },
+          { name:'箸（2膳）', price:160, imageUrl:'chop.jpg' },
+          { name:'カトラリーセット1人分', price:330, imageUrl:'cat.jpg' }
+        ]},
+        { name:'ランチボックス', imageUrl:'lunch.jpg', products:[
+          { name:'ランチボックス', price:550, imageUrl:'lunchb.jpg' },
+          { name:'2段ランチボックス', price:770, imageUrl:'lunch2.jpg' },
+          { name:'わっぱ風ランチボックス', price:770, imageUrl:'wappa.jpg' }
+        ]},
+        { name:'水筒・タンブラー', imageUrl:'water.jpg', products:[
+          { name:'水筒（ホワイト）', price:880, imageUrl:'suitow.jpg' },
+          { name:'水筒（ブラック）', price:880, imageUrl:'suitob.jpg' },
+          { name:'タンブラー（ホワイト）', price:660, imageUrl:'tamw.jpg' },
+          { name:'タンブラー（ブラック）', price:660, imageUrl:'tamb.jpg' }
+        ]},
+        { name:'容器・ボウル', imageUrl:'bowl.jpg', products:[
+          { name:'保存容器', price:660, imageUrl:'hyouki.jpg' },
+          { name:'ボウル', price:330, imageUrl:'bowl.jpg' },
+          { name:'ざる', price:330, imageUrl:'zaru.jpg' }
+        ]},
+        { name:'コースター・ランチョンマット', imageUrl:'coasterlunch.jpg', products:[
+          { name:'カップコースター', price:330, imageUrl:'coster.jpg' },
+          { name:'ランチョンマット', price:330, imageUrl:'lunchm.jpg' }
+        ]}
+      ]},
+      { id:'shuno', name:'収納', imageUrl:'shuno.jpg', subcategories:[
+        { name:'収納ボックス', imageUrl:'tool.jpg', products:[
+          { name:'S', price:550, imageUrl:'box.jpg' },
+          { name:'M', price:880, imageUrl:'box.jpg' },
+          { name:'L', price:1320, imageUrl:'box.jpg' }
+        ]},
+        { name:'バスケット・カゴ', imageUrl:'tool.jpg', products:[
+          { name:'バスケット', price:1320, imageUrl:'busket.jpg' },
+          { name:'カゴ', price:1100, imageUrl:'kago.jpg' }
+        ]},
+        { name:'ラック', imageUrl:'tool.jpg', products:[
+          { name:'ラック（ホワイト）', price:330, imageUrl:'luckw.jpg' },
+          { name:'ラック（ブラック）', price:330, imageUrl:'luckb.jpg' }
+        ]},
+        { name:'ハンガー', imageUrl:'tool.jpg', products:[
+          { name:'ハンガー（4本）', price:550, imageUrl:'hung4.jpg' },
+          { name:'ハンガー（6本）', price:660, imageUrl:'hung6.jpg' },
+          { name:'ピンチハンガー（ピンチ6つ）', price:700, imageUrl:'phung.jpg' },
+          { name:'ピンチハンガー（ピンチ8つ）', price:800, imageUrl:'phung.jpg' }
+        ]},
+        { name:'アクセサリートレー', imageUrl:'tool.jpg', products:[
+          { name:'アクササリートレー（ホワイト）', price:330, imageUrl:'torew.jpg' },
+          { name:'アクセサリートレー（ウッド）', price:330, imageUrl:'torewo.jpg' }
+        ]}
+      ]},
+      { id:'interia', name:'インテリア', imageUrl:'interia.jpg', subcategories:[
+        { name:'カーテン', imageUrl:'tool.jpg', products:[
+          { name:'ミニカーテン（ホワイト）', price:550, imageUrl:'katenw.jpg' },
+          { name:'ミニカーテン（グレー）', price:550, imageUrl:'kateng.jpg' }
+        ]},
+        { name:'時計', imageUrl:'tool.jpg', products:[
+          { name:'時計（ホワイト）', price:770, imageUrl:'tokeiw.jpg' },
+          { name:'時計（ブラック）', price:770, imageUrl:'tokeib.jpg' }
+        ]}
+      ]},
+      { id:'fashion', name:'ファッション雑貨・小物', imageUrl:'fashion.jpg', subcategories:[
+        { name:'ファッション雑貨', imageUrl:'tool.jpg', products:[
+          { name:'ベルト', price:330, imageUrl:'belt.jpg' },
+          { name:'サングラス', price:1100, imageUrl:'sunglass.jpg' },
+          { name:'めがね', price:550, imageUrl:'megane.jpg' },
+          { name:'帽子', price:1320, imageUrl:'cap.jpg' },
+          { name:'マスク', price:330, imageUrl:'mask.jpg' }
+        ]},
+        { name:'傘', imageUrl:'tool.jpg', products:[
+          { name:'傘', price:2420, imageUrl:'kasa.jpg' },
+          { name:'財布', price:330, imageUrl:'saihu.jpg' },
+          { name:'コインケース', price:330, imageUrl:'coin.jpg' },
+          { name:'ハンカチ', price:330, imageUrl:'hankachi.jpg' },
+          { name:'ポーチ', price:660, imageUrl:'pouch.jpg' },
+          { name:'パスケース', price:330, imageUrl:'passcase.jpg' }
+        ]}
+      ]},
+      { id:'device', name:'家電・デバイス', imageUrl:'device.jpg', subcategories:[
+        { name:'電池', imageUrl:'tool.jpg', products:[
+          { name:'単3', price:140, imageUrl:'tan3.jpg' },
+          { name:'単４', price:140, imageUrl:'tan3.jpg' },
+          { name:'ボタン電池', price:130, imageUrl:'botan.jpg' }
+        ]},
+        { name:'照明', imageUrl:'tool.jpg', products:[
+          { name:'ライト（ホワイト）', price:330, imageUrl:'lightw.jpg' },
+          { name:'ライト（ブラック）', price:330, imageUrl:'lightb.jpg' },
+          { name:'ランプシェード', price:880, imageUrl:'lampshade.jpg' }
+        ]},
+        { name:'イヤホン', imageUrl:'tool.jpg', products:[
+          { name:'有線イヤホン（ホワイト）', price:550, imageUrl:'yusenw.jpg' },
+          { name:'Bluetoothイヤホン（ホワイト）', price:2200, imageUrl:'bluetoothw.jpg' },
+          { name:'ヘッドフォン（ホワイト）', price:3850, imageUrl:'headphonew.jpg' }
+        ]}
+      ]}
     ];
+
+    const PRODUCT_DESCRIPTIONS = { '皿':'毎日の食卓をやさしく彩る、シンプルで使いやすいプレート。','プレート':'料理をきれいに引き立てる、使い勝手のよい上品なプレート。','お子様プレート':'かわいらしいデザインで、毎日の食事が楽しくなるお子様向けプレート。','マグカップ（ホワイト）':'やわらかなホワイトカラーが暮らしになじむ、シンプルなマグカップ。','マグカップ（ブラック）':'落ち着いたブラックカラーが大人っぽい、洗練されたマグカップ。','透明グラス':'飲み物の色まで楽しめる、すっきりとした透明感のあるグラス。','ワイングラス':'いつもの時間をちょっと特別にしてくれる、上品なワイングラス。','箸（4膳）':'食卓に取り入れやすい、色違いで楽しめるシンプルな4膳セット。','箸（2膳）':'毎日の食卓にちょうどいい、使いやすい2膳セット。','カトラリーセット1人分':'スプーン・フォークなどをまとめた、毎日の食事に便利なセット。','ランチボックス':'コンパクトで持ち運びやすい、毎日のランチにぴったりのお弁当箱。','2段ランチボックス':'たっぷり入って使い分けもできる、便利な2段タイプのお弁当箱。','わっぱ風ランチボックス':'木のぬくもりを感じるデザインで、ランチタイムをおしゃれに演出。','水筒（ホワイト）':'すっきりとしたホワイトカラーで、毎日の持ち歩きにおすすめの水筒。','水筒（ブラック）':'シックなブラックカラーが魅力の、スタイリッシュなマイボトル。','タンブラー（ホワイト）':'どんなシーンにも合わせやすい、清潔感のあるホワイトタンブラー。','タンブラー（ブラック）':'大人っぽいブラックカラーで、持つだけで気分が引き締まるタンブラー。','保存容器':'食材の保存や作り置きに便利な、すっきり収納できる保存容器。','ボウル':'サラダや料理の盛り付けに使いやすく、毎日の食卓に便利なボウル。','ざる':'野菜や麺類の水切りに活躍する、使いやすく扱いやすいキッチンアイテム。','カップコースター':'グラスやカップの下に敷くだけで、テーブルをかわいく演出するコースター。','ランチョンマット':'食卓に置くだけで、いつもの食事をおしゃれに見せてくれるランチョンマット。','S':'小物の整理にちょうどいい、コンパクトで使いやすい収納ボックス。','M':'衣類や雑貨などをすっきりまとめられる、使い勝手のよい収納ボックス。','L':'かさばるアイテムもしっかり収納できる、頼れる大容量ボックス。','バスケット':'見せる収納にもぴったりな、暮らしに自然になじむバスケット。','カゴ':'小物やタオルなどをまとめて、すっきり収納できるナチュラルなカゴ。','ラック（ホワイト）':'明るいホワイトカラーで、お部屋をすっきり見せてくれる収納ラック。','ラック（ブラック）':'シックなブラックカラーが空間を引き締める、スタイリッシュなラック。','ハンガー（4本）':'クローゼットをすっきり整える、使いやすいハンガー4本セット。','ハンガー（6本）':'衣類をまとめて整理できる、毎日の収納に便利なハンガー6本セット。','ピンチハンガー（ピンチ6つ）':'靴下やハンカチなどの小物干しに便利な、コンパクトなピンチハンガー。','ピンチハンガー（ピンチ8つ）':'小物をまとめて干せる、毎日の洗濯に便利なピンチハンガー。','アクササリートレー（ホワイト）':'アクセサリーをかわいく見せながら整理できる、上品なホワイトトレー。','アクセサリートレー（ウッド）':'木のぬくもりを感じるデザインで、大切なアクセサリーをおしゃれに収納。','ミニカーテン（ホワイト）':'やわらかなホワイトカラーで、お部屋を明るく整えるミニカーテン。','ミニカーテン（グレー）':'やわらかなグレーカラーで、お部屋をシックに整えるミニカーテン。','時計（ホワイト）':'すっきりとしたデザインで、どんなお部屋にも合わせやすい壁掛け時計。','時計（ブラック）':'シンプルなブラックカラーが空間のアクセントになるスタイリッシュな時計。','ベルト':'コーディネートのアクセントにも使える、シンプルで合わせやすいベルト。','サングラス':'いつものコーディネートに取り入れやすい、洗練されたデザインのサングラス。','めがね':'デイリーに使いやすく、顔まわりをすっきり見せてくれるシンプルなめがね。','帽子':'いつものスタイルにプラスするだけで、おしゃれに決まるデイリーハット。','マスク':'毎日使いやすく、顔まわりをすっきり見せてくれるシンプルなマスク。','傘':'雨の日も気分を上げてくれる、毎日持ち歩きたくなるおしゃれな傘。','財布':'コンパクトながら使いやすく、毎日のお出かけに寄り添うシンプルな財布。','コインケース':'小銭をすっきり収納できる、バッグに入れて持ち歩きやすいコインケース。','ハンカチ':'バッグに一枚入れておきたい、毎日使える上品なハンカチ。','ポーチ':'コスメや小物をまとめて収納できる、バッグの中を整える便利なポーチ。','パスケース':'毎日の通勤・通学に使いやすい、すっきりとしたデザインのパスケース。','単3':'リモコンやおもちゃなど、毎日の暮らしに欠かせない定番の単3電池。','単４':'小型のリモコンやデバイスにも使いやすい、便利な単4電池。','ボタン電池':'時計や小型機器などに使える、ストックしておくと便利なボタン電池。','ライト（ホワイト）':'やわらかなホワイトカラーで、お部屋を明るく彩るコンパクトライト。','ライト（ブラック）':'シックなブラックカラーがインテリアのアクセントになるミニライト。','ランプシェード':'いつものお部屋にやさしい雰囲気をプラスする、インテリア性の高いランプシェード。','有線イヤホン（ホワイト）':'シンプルなホワイトカラーで、日常使いしやすいベーシックな有線イヤホン。','Bluetoothイヤホン（ホワイト）':'ワイヤレスで身軽に楽しめる、毎日の音楽時間にぴったりのイヤホン。','ヘッドフォン（ホワイト）':'存在感のあるデザインで、音楽時間をおしゃれに楽しめるヘッドフォン。' };
 
     const INITIAL_POINTS = 1500;
     const SHEET_ENDPOINT = 'https://script.google.com/macros/s/AKfycbyz9B50dQASG2Zd2-PvGf0D_I4oRQSrYC3l35NUzE3BLxpKzVT5rWC7Or7zFYBVkrK8/exec';
     const ENABLE_SHEET_SYNC = Boolean(SHEET_ENDPOINT && SHEET_ENDPOINT.startsWith('https://'));
 
-    const experimentData = {
-      participant_id: (crypto?.randomUUID ? crypto.randomUUID() : `id-${Date.now()}`),
-      start_time_iso: null,
-      close_points_time_iso: null,
-      pay_time_iso: null,
-      total_time_ms: null,
-      events: [],
-      cart: [],
-      purchases: [],
-      cart_history: [],
-      product_detail_count: 0,
-      click_count: 0,
-      customer: {},
-      survey: {}
-    };
+    const experimentData = { participant_id:(crypto?.randomUUID ? crypto.randomUUID() : `id-${Date.now()}`), start_time_iso:null, close_points_time_iso:null, pay_time_iso:null, total_time_ms:null, events:[], cart:[], purchases:[], cart_history:[], product_detail_count:0, click_count:0, customer:{}, survey:{} };
 
-    const views = {
-      start: document.getElementById('view-start'),
-      shop: document.getElementById('view-shop'),
-      checkout: document.getElementById('view-checkout'),
-      survey: document.getElementById('view-survey')
-    };
+    const views = { start:document.getElementById('view-start'), shop:document.getElementById('view-shop'), checkout:document.getElementById('view-checkout'), survey:document.getElementById('view-survey') };
     const pointsDisplay = document.getElementById('points-display');
     const pointsNum = document.getElementById('points-num');
     const cartPointsDisp = document.getElementById('cart-points');
@@ -458,14 +480,8 @@
     const submitSurveyBtn = document.getElementById('submit-survey');
     const finalMsg = document.getElementById('final-msg');
 
-    let pointsOwned = 0;
-    let hasStarted = false;
-    let hasPaid = false;
-    let currentProduct = null;
-    let currentProductPrice = 0;
-    let currentQty = 1;
-    let canShowCartButton = false;     // ×後にtrue
-    let cartButtonAlreadyUsed = false; // 1回押したらtrue
+    let pointsOwned = 0, hasStarted = false, currentProduct = null, currentProductPrice = 0, currentQty = 1;
+    let canShowCartButton = false, cartButtonAlreadyUsed = false;
 
     function nowISO(){ return new Date().toISOString(); }
     function pushEvent(type, detail={}){ experimentData.events.push({type, ts:nowISO(), detail}); }
@@ -473,7 +489,7 @@
       Object.values(views).forEach(v => v.classList.remove('active'));
       views[name].classList.add('active');
       window.scrollTo({top:0,behavior:'smooth'});
-      pointsDisplay.style.display = (name === 'start') ? 'none' : 'block'; // スタート画面は非表示
+      pointsDisplay.style.display = (name === 'start') ? 'none' : 'block';
     }
     function getProductPrice(name){
       for (const c of CATEGORIES) for (const s of c.subcategories||[]) for (const p of s.products||[]) if (p.name===name) return p.price;
@@ -482,36 +498,142 @@
     function calcCartTotal(){ return experimentData.cart.reduce((sum,n)=>sum+getProductPrice(n),0); }
 
     function make7Scale(containerId, qName){
-      const root = document.getElementById(containerId);
-      root.innerHTML = '';
-      for(let i=1;i<=7;i++){
-        const label = document.createElement('label');
-        label.innerHTML = `<input type="radio" name="${qName}" value="${i}"><span>${i}</span>`;
-        root.appendChild(label);
-      }
+      const root = document.getElementById(containerId); root.innerHTML = '';
+      for(let i=1;i<=7;i++){ const label = document.createElement('label'); label.innerHTML = `<input type="radio" name="${qName}" value="${i}"><span>${i}</span>`; root.appendChild(label); }
     }
     function makeMultiScale(parentId, defs, prefix){
-      const parent = document.getElementById(parentId);
-      parent.innerHTML = '';
+      const parent = document.getElementById(parentId); parent.innerHTML = '';
       defs.forEach((d, idx) => {
-        const block = document.createElement('div');
-        block.style.margin = '12px 0';
-        block.innerHTML = `
-          <div style="font-weight:700;margin-bottom:6px;">${prefix}-${idx+1}：${d.title}</div>
-          <div class="sd-scale-wrap">
-            <div class="sd-left">${d.left}</div>
-            <div class="sd-scale" id="${prefix.toLowerCase()}_${idx+1}"></div>
-            <div class="sd-right">${d.right}</div>
-          </div>
-        `;
+        const block = document.createElement('div'); block.style.margin = '12px 0';
+        const mobileText = `${d.left} ←→ ${d.right}`;
+        block.innerHTML = `<div style="font-weight:700;margin-bottom:6px;">${prefix}-${idx+1}：${d.title}</div>
+          <div class="sd-scale-wrap" data-mobile-lr="${mobileText}">
+            <div class="sd-left">${d.left}</div><div class="sd-scale" id="${prefix.toLowerCase()}_${idx+1}"></div><div class="sd-right">${d.right}</div>
+          </div>`;
         parent.appendChild(block);
         const scale = block.querySelector('.sd-scale');
-        for(let i=1;i<=7;i++){
-          const label = document.createElement('label');
-          label.innerHTML = `<input type="radio" name="${prefix.toLowerCase()}_${idx+1}" value="${i}"><span>${i}</span>`;
-          scale.appendChild(label);
-        }
+        for(let i=1;i<=7;i++){ const label = document.createElement('label'); label.innerHTML = `<input type="radio" name="${prefix.toLowerCase()}_${idx+1}" value="${i}"><span>${i}</span>`; scale.appendChild(label); }
       });
+    }
+
+    /* ===== カルーセルJS（順番と幅計算を修正） ===== */
+    function initCarousel(){
+      const carousel = document.getElementById('ecx-carousel');
+      const viewport = document.getElementById('ecx-viewport');
+      const track = document.getElementById('ecx-track');
+      const prevBtn = document.getElementById('ecx-prev');
+      const nextBtn = document.getElementById('ecx-next');
+      const dotsWrap = document.getElementById('ecx-dots');
+
+      const originals = Array.from(track.children);
+      const originalCount = originals.length;
+      if (originalCount < 2) return;
+
+      // clone (last + originals + first)
+      const firstClone = originals[0].cloneNode(true);
+      const lastClone  = originals[originalCount - 1].cloneNode(true);
+      track.insertBefore(lastClone, originals[0]);
+      track.appendChild(firstClone);
+
+      const slides = Array.from(track.children);
+      let current = 1; // first real slide
+      let timer = null;
+      let isAnimating = false;
+
+      function slideMetrics(index){
+        const el = slides[index];
+        const rect = el.getBoundingClientRect();
+        const style = getComputedStyle(el);
+        const ml = parseFloat(style.marginLeft) || 0;
+        const mr = parseFloat(style.marginRight) || 0;
+        return { w: rect.width, outer: rect.width + ml + mr };
+      }
+
+      function getTranslateFor(index){
+        // 実幅(82% + 左右余白)に一致するよう「累積 outer」で計算
+        let leftSum = 0;
+        for(let i=0;i<index;i++){
+          leftSum += slideMetrics(i).outer;
+        }
+        const m = slideMetrics(index);
+        const slideCenterX = leftSum + (m.outer / 2);
+        const viewportCenterX = viewport.clientWidth / 2;
+        return viewportCenterX - slideCenterX;
+      }
+
+      function realIndexFromCurrent(){
+        if (current === 0) return originalCount - 1;
+        if (current === slides.length - 1) return 0;
+        return current - 1;
+      }
+
+      function updateActive(){
+        slides.forEach((s, i)=>s.classList.toggle('ecx-active', i===current));
+        const real = realIndexFromCurrent();
+        Array.from(dotsWrap.children).forEach((d,i)=>d.classList.toggle('ecx-active', i===real));
+      }
+
+      function centerCurrent(animate=true){
+        track.style.transition = animate ? 'transform .55s ease' : 'none';
+        track.style.transform = `translateX(${getTranslateFor(current)}px)`;
+        updateActive();
+      }
+
+      function renderDots(){
+        dotsWrap.innerHTML = '';
+        for(let i=0;i<originalCount;i++){
+          const d = document.createElement('button');
+          d.className = 'ecx-dot';
+          d.type = 'button';
+          d.setAttribute('aria-label', `${i+1}枚目へ`);
+          d.addEventListener('click', ()=>{
+            if(isAnimating) return;
+            moveTo(i+1, true);
+          });
+          dotsWrap.appendChild(d);
+        }
+      }
+
+      function moveTo(index, manual=false){
+        if(isAnimating) return;
+        isAnimating = true;
+        current = index;
+        centerCurrent(true);
+        if(manual) restartAuto();
+      }
+
+      function next(manual=false){ moveTo(current + 1, manual); }
+      function prev(manual=false){ moveTo(current - 1, manual); }
+
+      track.addEventListener('transitionend', ()=>{
+        // ② 順番保証: 1→2→3→1→2→3...
+        if(current === slides.length - 1){
+          current = 1;
+          centerCurrent(false);
+        }else if(current === 0){
+          current = originalCount;
+          centerCurrent(false);
+        }
+        isAnimating = false;
+      });
+
+      function startAuto(){ stopAuto(); timer = setInterval(()=>next(false), 4000); }
+      function stopAuto(){ if(timer){ clearInterval(timer); timer = null; } }
+      function restartAuto(){ startAuto(); }
+
+      prevBtn.addEventListener('click', ()=>prev(true));
+      nextBtn.addEventListener('click', ()=>next(true));
+
+      carousel.addEventListener('mouseenter', stopAuto);
+      carousel.addEventListener('mouseleave', startAuto);
+      carousel.addEventListener('touchstart', stopAuto, {passive:true});
+      carousel.addEventListener('touchend', startAuto, {passive:true});
+
+      window.addEventListener('resize', ()=>centerCurrent(false));
+
+      renderDots();
+      centerCurrent(false);
+      startAuto();
     }
 
     (function init(){
@@ -535,6 +657,7 @@
         {title:'頭で考えて決める',left:'頭で考えて決める',right:'気持ちで決める'}
       ],'Q3');
       showView('start');
+      initCarousel();
     })();
 
     startBtn.addEventListener('click',()=>{
@@ -555,8 +678,6 @@
       pointsPanel.style.display = 'none';
       experimentData.close_points_time_iso = nowISO();
       pushEvent('points_panel_closed');
-
-      // ×を押してから、カートボタン表示を許可
       canShowCartButton = true;
       cartButtonAlreadyUsed = false;
       cartFloating.style.display = 'block';
@@ -591,9 +712,7 @@
           });
         });
 
-        card.addEventListener('click',()=>{
-          prodDiv.style.display = (prodDiv.style.display==='block') ? 'none' : 'block';
-        });
+        card.addEventListener('click',()=>{ prodDiv.style.display = (prodDiv.style.display==='block') ? 'none' : 'block'; });
         categoriesDiv.appendChild(card);
       });
     }
@@ -604,39 +723,24 @@
       currentQty = 1;
       qtyDisplay.textContent = 1;
       detailName.textContent = p.name;
-      detailDesc.textContent = `${p.name} の詳細情報です。`;
+      detailDesc.textContent = PRODUCT_DESCRIPTIONS[p.name] || `${p.name} の詳細情報です。`;
       detailPrice.textContent = p.price;
       pointsStatus.textContent = `現在のポイント残高: ${pointsOwned}pt`;
       addToCartBtn.textContent = `カートに追加（${p.price}円）`;
-      if(p.imageUrl){
-        modalImage.style.backgroundImage = `url('images/${p.imageUrl}')`;
-        modalImage.textContent='';
-      }else{
-        modalImage.style.backgroundImage = '';
-        modalImage.textContent='画像';
-      }
+      if(p.imageUrl){ modalImage.style.backgroundImage = `url('images/${p.imageUrl}')`; modalImage.textContent=''; }
+      else { modalImage.style.backgroundImage = ''; modalImage.textContent='画像'; }
       experimentData.product_detail_count++;
       pushEvent('product_detail_open',{product:p.name});
       modalBackdrop.style.display='flex';
       detailModal.focus();
     }
-    function closeDetail(){
-      if(currentProduct) pushEvent('product_detail_close',{product:currentProduct});
-      currentProduct = null;
-      modalBackdrop.style.display='none';
-    }
+    function closeDetail(){ if(currentProduct) pushEvent('product_detail_close',{product:currentProduct}); currentProduct = null; modalBackdrop.style.display='none'; }
 
     qtyMinus.addEventListener('click',()=>{
-      if(currentQty>1){
-        currentQty--;
-        qtyDisplay.textContent=currentQty;
-        addToCartBtn.textContent = `カートに追加（${currentProductPrice*currentQty}円）`;
-      }
+      if(currentQty>1){ currentQty--; qtyDisplay.textContent=currentQty; addToCartBtn.textContent = `カートに追加（${currentProductPrice*currentQty}円）`; }
     });
     qtyPlus.addEventListener('click',()=>{
-      currentQty++;
-      qtyDisplay.textContent=currentQty;
-      addToCartBtn.textContent = `カートに追加（${currentProductPrice*currentQty}円）`;
+      currentQty++; qtyDisplay.textContent=currentQty; addToCartBtn.textContent = `カートに追加（${currentProductPrice*currentQty}円）`;
     });
 
     addToCartBtn.addEventListener('click',()=>{
@@ -646,8 +750,7 @@
       pointsOwned -= total;
       for(let i=0;i<currentQty;i++) experimentData.cart.push(currentProduct);
       experimentData.cart_history.push({action:'add',name:currentProduct,price:total,remaining_points:pointsOwned,ts:nowISO()});
-      pointsNum.textContent = pointsOwned;
-      cartPointsDisp.textContent = pointsOwned;
+      pointsNum.textContent = pointsOwned; cartPointsDisp.textContent = pointsOwned;
       pointsStatus.textContent = `現在のポイント残高: ${pointsOwned}pt`;
       refreshCartUI();
       alert(`${currentProduct} を ${currentQty} 個カートに追加しました。\n残りポイント：${pointsOwned}pt`);
@@ -676,23 +779,18 @@
             pointsOwned += price;
             experimentData.cart.splice(idx,1);
             experimentData.cart_history.push({action:'remove',name,price,remaining_points:pointsOwned,ts:nowISO()});
-            pointsNum.textContent = pointsOwned;
-            cartPointsDisp.textContent = pointsOwned;
+            pointsNum.textContent = pointsOwned; cartPointsDisp.textContent = pointsOwned;
             refreshCartUI();
           });
-          right.appendChild(del);
-          row.appendChild(right);
-          cartList.appendChild(row);
+          right.appendChild(del); row.appendChild(right); cartList.appendChild(row);
         });
       }
       cartTotal.textContent = calcCartTotal();
       cartPointsDisp.textContent = pointsOwned;
     }
 
-    // カート確認ボタンは「×後〜1回押すまで」だけ表示
     cartFloating.addEventListener('click',()=>{
       if(!canShowCartButton || cartButtonAlreadyUsed) return;
-
       cartButtonAlreadyUsed = true;
       cartFloating.style.display='none';
       cartView.style.display='block';
@@ -703,7 +801,6 @@
 
     backToShopBtn.addEventListener('click',()=>{
       cartView.style.display='none';
-      // 一回押した後は再表示しない
       cartFloating.style.display='none';
       pushEvent('back_to_shop');
     });
@@ -726,8 +823,7 @@
         div.textContent = `${name} × ${tally[name]}（${getProductPrice(name)*tally[name]}pt）`;
         checkoutItems.appendChild(div);
       });
-      const total = calcCartTotal();
-      checkoutTotal.textContent = total;
+      checkoutTotal.textContent = calcCartTotal();
       checkoutRemain.textContent = pointsOwned;
     }
 
@@ -739,32 +835,23 @@
 
       experimentData.customer = {gender:g, age:Number(age)};
       experimentData.purchases = experimentData.cart.slice();
-
       experimentData.pay_time_iso = nowISO();
       experimentData.total_time_ms = experimentData.close_points_time_iso
         ? Date.parse(experimentData.pay_time_iso) - Date.parse(experimentData.close_points_time_iso)
         : null;
 
-      hasPaid = true;
-      pushEvent('payment_success',{
-        total:calcCartTotal(),
-        purchases:experimentData.purchases,
-        total_time_ms:experimentData.total_time_ms
-      });
-
+      pushEvent('payment_success',{ total:calcCartTotal(), purchases:experimentData.purchases, total_time_ms:experimentData.total_time_ms });
       showView('survey');
     });
 
     submitSurveyBtn.addEventListener('click',()=>{
       function rv(name){ return document.querySelector(`input[name="${name}"]:checked`)?.value || ''; }
-
       const survey = {
         q1: rv('q1'),
         q2_1: rv('q2_1'), q2_2: rv('q2_2'), q2_3: rv('q2_3'), q2_4: rv('q2_4'), q2_5: rv('q2_5'),
         q3_1: rv('q3_1'), q3_2: rv('q3_2'), q3_3: rv('q3_3'), q3_4: rv('q3_4'), q3_5: rv('q3_5'),
         q4: rv('q4')
       };
-
       if(!Object.values(survey).every(v=>v!=='')){ alert('すべての項目に回答してください。'); return; }
 
       experimentData.survey = survey;
@@ -784,33 +871,23 @@
         ...survey
       };
 
-      function done(){
-        document.getElementById('view-survey').classList.remove('active');
-        finalMsg.style.display = 'block';
-      }
+      function done(){ document.getElementById('view-survey').classList.remove('active'); finalMsg.style.display = 'block'; }
 
       if(ENABLE_SHEET_SYNC){
         submitSurveyBtn.disabled = true;
         submitSurveyBtn.textContent = '送信中...';
         fetch(SHEET_ENDPOINT,{
-          method:'POST',
-          headers:{'Content-Type':'text/plain'},
-          body:JSON.stringify(dataToSend),
-          mode:'no-cors'
+          method:'POST', headers:{'Content-Type':'text/plain'},
+          body:JSON.stringify(dataToSend), mode:'no-cors'
         }).then(done).catch(()=>{
           alert('データ送信に失敗しました。再度お試しください。');
-          submitSurveyBtn.disabled = false;
-          submitSurveyBtn.textContent = '回答を送信';
+          submitSurveyBtn.disabled = false; submitSurveyBtn.textContent = '回答を送信';
         });
-      }else{
-        done();
-      }
+      }else done();
     });
 
     window.addEventListener('beforeunload',()=>{
-      if(experimentData.start_time_iso && !experimentData.end_time_iso){
-        pushEvent('unload_before_finish');
-      }
+      if(experimentData.start_time_iso && !experimentData.end_time_iso) pushEvent('unload_before_finish');
     });
   </script>
 </body>
