@@ -3,430 +3,434 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>架空EC実験（修正版）</title>
-
-  <!-- Noto Sans JP -->
+  <title>架空EC実験（再構成版）</title>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
-
   <style>
-    :root{--color1: #fffaed; /* light beige */--color2: #111111; /* black */--color3: #CFCECA; /* gray beige */--bg: #ffffff;--text: #111111;--muted: #555555;--radius: 8px;font-family: 'Noto Sans JP', sans-serif;}
-    * { box-sizing: border-box; }
-    body { margin: 0; background: var(--color3); color: var(--text); }
-    .wrap { max-width: 900px; margin: 24px auto; background: var(--bg); padding: 20px; border-radius: 10px; box-shadow: 0 4px 14px rgba(0,0,0,0.06); }
-    header { display:flex; align-items:center; justify-content:space-between; gap:12px; }
-    h1 { background: var(--color1); box-shadow: 0 0 0 2px #111111 inset; padding:0.4em 0.7em; margin: 0; font-size: 20px; color: var(--color2); }
-    button { background: var(--color2); color: #ffffff; border:none; padding:10px 14px; border-radius:6px; cursor:pointer; font-weight:700; }
-    button[disabled] { opacity:0.5; cursor:not-allowed; }
+    :root{
+      --color1:#fffaed; --color2:#111; --color3:#CFCECA;
+      --bg:#fff; --text:#111; --radius:8px;
+      font-family:'Noto Sans JP',sans-serif;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;background:var(--color3);color:var(--text)}
+    .wrap{max-width:980px;margin:24px auto;background:var(--bg);padding:20px;border-radius:10px;box-shadow:0 4px 14px rgba(0,0,0,.06)}
+    header{display:flex;align-items:center;justify-content:space-between;gap:12px}
+    h1{background:var(--color1);box-shadow:0 0 0 2px #111 inset;padding:.4em .7em;margin:0;font-size:20px}
+    h2{margin:8px 0 12px}
+    h3{margin:0 0 10px}
+    button{background:var(--color2);color:#fff;border:none;padding:10px 14px;border-radius:6px;cursor:pointer;font-weight:700}
+    button[disabled]{opacity:.5;cursor:not-allowed}
+    .muted{color:#555;font-size:13px}
 
-    /* Start screen */
-    .start-area { text-align:center; padding: 40px 10px; background: var(--bg); border-radius: var(--radius); }
-    .start-area button { font-size: 18px; padding:12px 20px; }
-    .start-img { max-width: 100%; height: auto; margin: 20px 0; border-radius: var(--radius); box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
-   
-    /* Points modal */
-    .points-panel { position: fixed; inset:0; width:100%; background: #ffffff; display: none; align-items: center;justify-content: center;z-index: 1000;}
-    .points-panel > div {font-size: 32px; font-weight: 700;text-align: center; position: relative;}
-    .points-panel > div strong { display: block; font-size: 64px; color: #4285f4; margin-top: 15px;}
-    .points-panel .close { position: absolute; bottom: -50px; left: 50%; transform: translateX(-50%); background: #eeeeee; border: none; border-radius: 50%; width: 40px; height: 40px; font-size: 24px; cursor: pointer; color: #111111;}
-    #points-display { position: fixed; top: 18px; right: 18px; background: var(--color1); border: 2px solid #111111; padding: 10px 14px; border-radius: 10px; box-shadow: 0 8px 24px rgba(0,0,0,0.12); z-index: 450;}
-    
-    /* Categories */
-    .categories { margin-top: 20px; display:grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap:16px; }
-    .cat-card { background: var(--color1); border: 2px solid #111111; padding: 16px; border-radius: 8px; cursor: pointer; min-height: 140px; }
-    .cat-image { width: 100%; height: 120px; background: var(--color3); border-radius: 6px; margin-bottom: 8px; display: flex; align-items: center; justify-content: center; font-size: 14px; color: #999; }
-    .cat-title { font-weight:700; color:var(--color2); display:flex; justify-content:center; align-items:center; font-size: 16px; min-height: 28px; position:relative; }
-    .cat-toggle { position:absolute; right:0; top:50%; transform:translateY(-50%); font-size:14px; }
-    .cat-products { margin-top:10px; display:none; padding:8px; background:#fff; border-radius:6px; border:1px solid #111111; }
-    .product-item { padding:6px 8px; border-bottom:1px dashed rgba(0,0,0,0.05); display:flex; justify-content:space-between; align-items:center; }
-    .product-item:last-child{ border-bottom: none; }
+    #points-display{
+      position:fixed;top:18px;right:18px;background:var(--color1);
+      border:2px solid #111;padding:10px 14px;border-radius:10px;
+      box-shadow:0 8px 24px rgba(0,0,0,.12);z-index:450;display:none;
+    }
 
-    /* Detail modal */
-    .modal-backdrop { position: fixed; inset:0; background: rgba(0,0,0,0.45); display:none; align-items:center; justify-content:center; z-index:600; }
-    .modal { background:#fff; padding:16px; border-radius:8px; width: 380px; max-width:90%; border: 2px solid #111111; }
-    .modal-image { width: 100%; height: 200px; background: var(--color3); border-radius: 6px; margin-bottom: 12px; display: flex; align-items: center; justify-content: center; font-size: 14px; color: #999; }
-    .modal h3 { margin:0 0 8px 0; color:var(--color2); }
-    .modal-actions { margin-top:12px; display:flex; justify-content:space-between; align-items:center; gap:8px; }
-    .modal-actions .back-btn { background:#ffffff; color:#111111; border:1px solid #111111; }
-    .modal .price { font-weight:700; color:#111111; margin-top:8px; }
-    
-    /* Quantity selector */
-    .quantity-selector { margin-top:12px; display:flex; align-items:center; justify-content:center; gap:10px; }
-    .quantity-selector button { padding:6px 12px; font-size:16px; min-width:40px; }
-    .quantity-selector span { font-size:18px; font-weight:700; min-width:40px; text-align:center; }
+    .view{display:none}
+    .view.active{display:block}
 
-    /* Cart floating button (shows when scrolled to bottom) */
-    .cart-btn { position: fixed; left: 50%; transform: translateX(-50%); bottom: 18px; background: var(--color2); color: #fff; padding:12px 18px; border-radius: 999px; display:none; z-index:400; width: max-content; min-width: 180px; text-align:center; box-shadow: 0 6px 18px rgba(0,0,0,0.16); }
+    .start-area{text-align:center;padding:16px 10px 30px;border-radius:var(--radius)}
+    .start-area button{font-size:20px;padding:14px 26px}
+    .start-hero{
+      width:100%;
+      height:220px;
+      object-fit:cover;
+      border-radius:10px;
+      margin-bottom:16px;
+      box-shadow:0 4px 12px rgba(0,0,0,.08);
+      background:#eee;
+      display:block;
+    }
 
-    /* Cart view */
-    .cart-view { display:none; padding: 12px; background: var(--color1); border-radius:8px; margin-top:16px; }
-    .cart-list { max-height: 300px; overflow:auto; border:1px solid rgba(0,0,0,0.05); padding:8px; border-radius:6px; background:#fff; }
-    .cart-row { display:flex; justify-content:space-between; align-items:center; padding:6px 8px; border-bottom:1px dashed rgba(0,0,0,0.05); }
-    .cart-row:last-child{ border-bottom:none; }
+    .points-panel{
+      position:fixed;inset:0;background:#fff;display:none;align-items:center;justify-content:center;z-index:1000
+    }
+    .points-panel>div{font-size:32px;font-weight:700;text-align:center;position:relative}
+    .points-panel>div strong{display:block;font-size:64px;color:#4285f4;margin-top:15px}
+    .points-panel .close{
+      position:absolute;bottom:-50px;left:50%;transform:translateX(-50%);
+      background:#eee;border:none;border-radius:50%;width:40px;height:40px;font-size:24px;cursor:pointer;color:#111
+    }
 
-    /* Cart action buttons */
-    .cart-actions { margin-top:12px; display:flex; justify-content:space-between; align-items:center; gap:8px; }
-    .cart-actions .pay-btn { margin:0; padding:12px; font-size:16px; }
-    .cart-actions .back-btn { background:var(--color1); color:#111111; border:1px solid #111111; padding:8px 12px; font-size:14px; }
+    .categories{margin-top:16px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+    .cat-card{background:var(--color1);border:2px solid #111;padding:16px;border-radius:8px;cursor:pointer}
+    .cat-image{width:100%;height:120px;background:var(--color3);border-radius:6px;margin-bottom:8px;background-size:cover;background-position:center}
+    .cat-title{font-weight:700;display:flex;justify-content:space-between;align-items:center}
+    .cat-products{margin-top:10px;display:none;padding:8px;background:#fff;border-radius:6px;border:1px solid #111}
+    .product-item{padding:6px 8px;border-bottom:1px dashed rgba(0,0,0,.08);display:flex;justify-content:space-between;align-items:center}
+    .product-item:last-child{border-bottom:none}
 
-    /* Pay button appears when cart view scrolled to bottom */
-    .pay-btn { margin-top:12px; width:100%; padding:12px; font-size:16px; background:#111111; color:#ffffff; font-weight:700; border-radius:6px; display:none; }
+    .modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.45);display:none;align-items:center;justify-content:center;z-index:600}
+    .modal{background:#fff;padding:16px;border-radius:8px;width:380px;max-width:90%;border:2px solid #111}
+    .modal-image{width:100%;height:200px;background:var(--color3);border-radius:6px;margin-bottom:12px;background-size:cover;background-position:center;display:flex;align-items:center;justify-content:center;color:#777}
+    .quantity-selector{margin-top:12px;display:flex;align-items:center;justify-content:center;gap:10px}
+    .quantity-selector button{padding:6px 12px;font-size:16px;min-width:40px}
+    .quantity-selector span{font-size:18px;font-weight:700;min-width:40px;text-align:center}
+    .modal-actions{margin-top:12px;display:flex;justify-content:space-between;gap:8px}
+    .back-btn{background:#fff;color:#111;border:1px solid #111}
+    .points-status{margin-top:10px;padding:8px;border:1px solid #111;border-radius:6px;background:var(--color1);font-weight:700;text-align:center}
 
-    /* Survey */
-    .survey { display:none; padding:12px; margin-top:16px; background:var(--color1); border-radius:8px; }
-    .q { margin-bottom:12px; }
-    .q > div { display:flex; flex-wrap:wrap; gap:8px; }
-    .q label { display:inline-flex; align-items:center; gap:6px; margin-right:0; padding:8px 12px; border:1px solid #111111; border-radius:999px; background:#f8f8f8; font-size:16px; cursor:pointer; }
-    .q input[type="radio"] { transform: scale(1.2); accent-color: #111111; }
-    .survey select { width:100%; padding:12px; border:2px solid #111111; border-radius:6px; font-size:16px; }
-    .points-status { margin-top:10px; padding:8px 10px; border:1px solid #111111; border-radius:6px; background:var(--color1); font-weight:700; text-align:center; }
-    .final-msg { display:none; padding:18px; text-align:center; color:var(--color2); font-weight:700; margin-top:16px; }
+    .cart-btn{
+      position:fixed;left:50%;transform:translateX(-50%);bottom:18px;background:#111;color:#fff;
+      padding:12px 18px;border-radius:999px;display:none;z-index:400;min-width:180px;text-align:center
+    }
 
-    footer { margin-top: 20px; text-align:right; color:#666; font-size:13px; }
+    .cart-view{padding:12px;background:var(--color1);border-radius:8px;margin-top:16px}
+    .cart-list{max-height:300px;overflow:auto;border:1px solid rgba(0,0,0,.08);padding:8px;border-radius:6px;background:#fff}
+    .cart-row{display:flex;justify-content:space-between;align-items:center;padding:6px 8px;border-bottom:1px dashed rgba(0,0,0,.08)}
+    .cart-row:last-child{border-bottom:none}
+    .cart-actions{margin-top:12px;display:flex;justify-content:space-between;gap:8px}
 
-    /* small screens */
-    @media (max-width:520px){
-      .categories { grid-template-columns: 1fr; }
+    .panel{padding:14px;background:var(--color1);border-radius:8px;border:1px solid #111;margin-bottom:12px}
+    .field{margin:10px 0}
+    .field input[type="text"]{
+      width:100%;padding:10px;border:2px solid #111;border-radius:6px;font-size:16px;background:#fff;
+    }
+    .radio-row{display:flex;gap:14px;flex-wrap:wrap}
+    .radio-row label{display:inline-flex;align-items:center;gap:6px}
+
+    .sd-block{margin:18px 0;padding:12px;border:1px solid #111;border-radius:8px;background:#fff}
+    .sd-title{font-weight:700;margin-bottom:8px}
+    .sd-scale-wrap{
+      display:grid;
+      grid-template-columns:max-content auto max-content;
+      align-items:center;
+      gap:6px; /* 文とボタンを近づける */
+    }
+    .sd-left,.sd-right{font-size:13px;color:#444;white-space:nowrap}
+    .sd-scale{display:flex;gap:4px;align-items:center;justify-content:center}
+    .sd-scale label{
+      display:flex;flex-direction:column;align-items:center;gap:2px;
+      font-size:12px;min-width:36px;cursor:pointer; /* 広め */
+      padding:4px 2px;
+    }
+    .sd-scale input[type="radio"]{
+      width:20px;height:20px; /* ボタン大きく */
+      accent-color:#111;
+    }
+
+    #submit-survey{
+      width:100%;
+      font-size:18px;
+      padding:14px 18px;
+      border-radius:10px;
+    }
+
+    .final-msg{display:none;padding:18px;text-align:center;font-weight:700;margin-top:16px}
+    footer{margin-top:20px;text-align:right;color:#666;font-size:13px}
+
+    @media (max-width:720px){
+      .categories{grid-template-columns:1fr}
+      .sd-scale-wrap{grid-template-columns:1fr}
+      .sd-left,.sd-right{text-align:center}
     }
   </style>
 </head>
 <body>
-<div class="wrap" id="app">
+  <div id="points-display">残高: <strong id="points-num">0</strong> pt</div>
 
+  <div class="wrap" id="app">
     <header>
       <h1>🛒 架空EC実験</h1>
-      <div id="points-display">残高: <strong id="points-num">500</strong> pt</div>
+      <div class="muted">実験ページ</div>
     </header>
 
     <main>
-      <!-- Start area -->
-      <section class="start-area" id="start-area">
-        <p>以下の「スタート」ボタンを押すと実験が始まります。</p>
-        <button id="start-btn" type="button">スタート</button>
-
-        <img src="start.jpg" alt="実験イメージ画像" class="start-img">
+      <section id="view-start" class="view active">
+        <div class="start-area">
+          <img src="start.jpg" alt="実験イメージ画像" class="start-hero" onerror="this.style.display='none'">
+          <p>スタートボタンを押すと実験が始まります。</p>
+          <button id="start-btn" type="button">スタート</button>
+        </div>
       </section>
 
-      <!-- Categories (shown after start) -->
-      <section id="shop-area" style="display:none; margin-top:18px;">
-        <h2 style="color:var(--color2); margin:8px 0;">カテゴリ</h2>
+      <section id="view-shop" class="view">
+        <h2>カテゴリ</h2>
         <div class="categories" id="categories"></div>
+        <div style="height:280px"></div>
 
-        <!-- Spacer to force scroll -->
-        <div style="height:400px"></div>
+        <section class="cart-view" id="cart-view" style="display:none;">
+          <h3>カート内容</h3>
+          <div class="cart-list" id="cart-list"></div>
+          <div style="margin-top:10px;display:flex;justify-content:space-between;">
+            <div>合計: <strong id="cart-total">0</strong> pt</div>
+            <div>残高: <strong id="cart-points">0</strong> pt</div>
+          </div>
+          <div class="cart-actions">
+            <button id="back-to-shop-btn" class="back-btn" type="button">選びなおす</button>
+            <button id="to-checkout-btn" type="button">支払いへ進む</button>
+          </div>
+        </section>
       </section>
 
-      <!-- Cart view -->
-      <section class="cart-view" id="cart-view" style="display:none;">
-        <h3 style="color:var(--color2); margin-top:0;">カート内容</h3>
-        <div class="cart-list" id="cart-list">
-          <!-- list -->
+      <section id="view-checkout" class="view">
+        <h2>支払い情報入力</h2>
+        <div class="panel">
+          <h3>顧客基本情報</h3>
+          <div class="field">
+            <label>性別</label>
+            <div class="radio-row">
+              <label><input type="radio" name="gender" value="男"> 男</label>
+              <label><input type="radio" name="gender" value="女"> 女</label>
+            </div>
+          </div>
+          <div class="field">
+            <label for="age-input">年齢（半角数字）</label>
+            <input id="age-input" type="text" inputmode="numeric" pattern="[0-9]*" placeholder="例: 21">
+          </div>
         </div>
-       <div style="margin-top:10px; display:flex; justify-content:space-between; align-items:center;">
-    <div>合計: <strong id="cart-total">0</strong> pt</div>
-    <div>残高: <strong id="cart-points">500</strong> pt</div>
-</div>
 
-        <div class="cart-actions">
-          <button id="back-to-shop-btn" class="back-btn" type="button">選びなおす</button>
-          <button id="pay-btn" class="pay-btn" type="button">この内容で支払う</button>
+        <div class="panel">
+          <h3>今回カートに入れた商品一覧</h3>
+          <div id="checkout-items"></div>
+          <div style="margin-top:10px;display:flex;justify-content:space-between;">
+            <div>合計: <strong id="checkout-total">0</strong> pt</div>
+            <div>残高: <strong id="checkout-remain">0</strong> pt</div>
+          </div>
         </div>
+
+        <button id="pay-btn" type="button" style="width:100%;font-size:16px;">支払う</button>
       </section>
 
-      <!-- Survey -->
-      <section class="survey" id="survey">
-        <h3 style="color:var(--color2); margin-top:0;">事後アンケート</h3>
+      <section id="view-survey" class="view">
+        <h2>購入後アンケート</h2>
 
-        <div class="q">
-          <p>1. 製品を選ぶことが面倒だった（1〜5）</p>
-          <div>
-            <label><input name="q1" type="radio" value="1">1</label>
-            <label><input name="q1" type="radio" value="2">2</label>
-            <label><input name="q1" type="radio" value="3">3</label>
-            <label><input name="q1" type="radio" value="4">4</label>
-            <label><input name="q1" type="radio" value="5">5</label>
+        <div class="sd-block">
+          <div class="sd-title">Q1：現在の温度、湿度の環境はどれくらい不快ですか？（不快環境：蒸し暑いなど）</div>
+          <div class="sd-scale-wrap">
+            <div class="sd-left">非常に快適</div>
+            <div class="sd-scale" id="q1-scale"></div>
+            <div class="sd-right">非常に不快</div>
           </div>
         </div>
 
-        <div class="q">
-          <p>2. 複数の商品を十分に検討した（1〜5）</p>
-          <div>
-            <label><input name="q2" type="radio" value="1">1</label>
-            <label><input name="q2" type="radio" value="2">2</label>
-            <label><input name="q2" type="radio" value="3">3</label>
-            <label><input name="q2" type="radio" value="4">4</label>
-            <label><input name="q2" type="radio" value="5">5</label>
+        <div class="sd-block">
+          <div class="sd-title">Q2：今回の商品選択にあてはまるものにチェックをしてください</div>
+          <div id="q2-group"></div>
+        </div>
+
+        <div class="sd-block">
+          <div class="sd-title">Q3：普段、買い物するときはどのように商品を選びますか。あてはまるものにチェックをしてください</div>
+          <div id="q3-group"></div>
+        </div>
+
+        <div class="sd-block">
+          <div class="sd-title">Q4：今回の商品選択の満足度を回答してください。</div>
+          <div class="sd-scale-wrap">
+            <div class="sd-left">全く満足していない</div>
+            <div class="sd-scale" id="q4-scale"></div>
+            <div class="sd-right">非常に満足している</div>
           </div>
         </div>
 
-        <div class="q">
-          <p>3. 自分の希望条件に合うかを慎重に検討した（1〜5）</p>
-          <div>
-            <label><input name="q3" type="radio" value="1">1</label>
-            <label><input name="q3" type="radio" value="2">2</label>
-            <label><input name="q3" type="radio" value="3">3</label>
-            <label><input name="q3" type="radio" value="4">4</label>
-            <label><input name="q3" type="radio" value="5">5</label>
-          </div>
-        </div>
-
-        <div class="q">
-          <p>4. 今回の選択に納得している（1〜5）</p>
-          <div>
-            <label><input name="q4" type="radio" value="1">1</label>
-            <label><input name="q4" type="radio" value="2">2</label>
-            <label><input name="q4" type="radio" value="3">3</label>
-            <label><input name="q4" type="radio" value="4">4</label>
-            <label><input name="q4" type="radio" value="5">5</label>
-          </div>
-        </div>
-
-        <div class="q">
-          <p>5. 今回悩んだ製品数はいくつですか（1〜10）</p>
-          <select id="q5">
-            <option value="">選択してください</option>
-            <!-- options 1-10 -->
-          </select>
-        </div>
-
-        <div style="display:flex; gap:8px;">
-          <button id="submit-survey" type="button">回答を送信</button>
-        </div>
+        <button id="submit-survey" type="button">回答を送信</button>
       </section>
 
-      <div class="final-msg" id="final-msg">
-        回答を送信しました。ご協力ありがとうございました。
-      </div>
+      <div class="final-msg" id="final-msg">回答を送信しました。ご協力ありがとうございました。</div>
     </main>
 
+    <footer>※ローカル実行用HTML（単体で動作）</footer>
   </div>
 
-  <!-- Points panel (after start) -->
-  <div class="points-panel" id="points-panel" style="display:none;">
-    <div>獲得ポイント <strong id="points-500">500</strong> pt
+  <div class="points-panel" id="points-panel">
+    <div>獲得ポイント <strong id="points-amount">1500</strong> pt
       <button class="close" id="close-points" aria-label="閉じる">✕</button>
     </div>
   </div>
 
-  <!-- Product detail modal -->
   <div class="modal-backdrop" id="modal-backdrop">
-    <div class="modal" role="dialog" aria-modal="true" id="detail-modal" tabindex="-1">
-      <button id="detail-close" style="float:right; background:transparent; border:none; font-weight:700; cursor:pointer;">✕</button>
+    <div class="modal" id="detail-modal" role="dialog" aria-modal="true" tabindex="-1">
+      <button id="detail-close" style="float:right;background:transparent;color:#111;border:none;font-weight:700;cursor:pointer;">✕</button>
       <div class="modal-image" id="modal-image">画像</div>
       <h3 id="detail-name"></h3>
-      <p id="detail-desc">商品の詳細説明が入ります。</p>
-      <div class="price">価格: <span id="detail-price">150</span> 円</div>
-      <div class="points-status" id="points-status">現在のポイント残高: 0円</div>
-      
-      <!-- 数量選択 -->
+      <p id="detail-desc">商品の詳細説明</p>
+      <div class="price">価格: <span id="detail-price">0</span> 円</div>
+      <div class="points-status" id="points-status">現在のポイント残高: 0pt</div>
       <div class="quantity-selector">
         <button id="qty-minus" type="button">−</button>
         <span id="qty-display">1</span>
         <button id="qty-plus" type="button">＋</button>
       </div>
-
       <div class="modal-actions">
         <button id="detail-back-btn" class="back-btn" type="button">戻る</button>
-        <button id="add-to-cart-btn">カートに追加</button>
+        <button id="add-to-cart-btn" type="button">カートに追加</button>
       </div>
     </div>
   </div>
 
-  <!-- Cart floating button -->
   <button id="cart-floating" class="cart-btn" type="button">カートを確認する</button>
 
   <script>
-    // --- データ定義：商品ごとの価格 ---
     const CATEGORIES = [
       { 
         id: 'kitchen', 
         name: 'キッチン用品', 
-        imageUrl: 'kitchen.jpg', // 画像ファイル名
+        imageUrl: 'kitchen.jpg',
         subcategories:[
-          { name: '皿・プレート',imageUrl:'sara.jpg', products: [
-            { name: '皿', price: 150, imageUrl: 'fpan.jpg' },
-            { name: 'プレート', price: 140, imageUrl: 'nabe.jpg' },
-            { name: 'お子様プレート', price: 130, imageUrl: 'cutting.jpg' }
+          { name: '皿・プレート',imageUrl:'sarap.jpg', products: [
+            { name: '皿', price: 330, imageUrl: 'sara.jpg' },
+            { name: 'プレート', price: 550, imageUrl: 'prate.jpg' },
+            { name: 'お子様プレート', price: 550, imageUrl: 'kidsp.jpg' }
           ]},
-          { name: 'グラス・カップ',imageUrl:'wrap.jpg', products: [
-            { name: 'マグカップ（ホワイト）', price: 150, imageUrl: 'wrap.jpg' },
-            { name: 'マグカップ（ブラック）', price: 120, imageUrl: 'catrary.jpg' },
-            { name: '透明グラス', price: 120, imageUrl: 'catrary.jpg' },
-            { name: 'ワイングラス', price: 120, imageUrl: 'pod.jpg' }
+          { name: 'グラス・カップ',imageUrl:'glass.jpg', products: [
+            { name: 'マグカップ（ホワイト）', price: 330, imageUrl: 'magw.jpg' },
+            { name: 'マグカップ（ブラック）', price: 330, imageUrl: 'magb.jpg' },
+            { name: '透明グラス', price: 330, imageUrl: 'glass.jpg' },
+            { name: 'ワイングラス', price: 660, imageUrl: 'wine.jpg' }
           ]},
-           { name: '箸・カトラリー',imageUrl:'wrap.jpg', products: [
-            { name: '箸（4膳）', price: 150, imageUrl: 'wrap.jpg' },
-            { name: '箸（2膳）', price: 120, imageUrl: 'catrary.jpg' },
-            { name: 'カトラリーセット1人分', price: 120, imageUrl: 'pod.jpg' }
+          { name: '箸・カトラリー',imageUrl:'chopcat.jpg', products: [
+            { name: '箸（4膳）', price: 330, imageUrl: 'chop.jpg' },
+            { name: '箸（2膳）', price: 160, imageUrl: 'chop.jpg' },
+            { name: 'カトラリーセット1人分', price: 330, imageUrl: 'cat.jpg' }
           ]},
-           { name: 'ランチボックス',imageUrl:'wrap.jpg', products: [
-            { name: 'ランチボックス', price: 150, imageUrl: 'wrap.jpg' },
-            { name: '2段ランチボックス', price: 120, imageUrl: 'catrary.jpg' },
-            { name: 'わっぱ風ランチボックス', price: 120, imageUrl: 'catrary.jpg' },
-            { name: '持ち運び用箸', price: 120, imageUrl: 'pod.jpg' }
+          { name: 'ランチボックス',imageUrl:'lunch.jpg', products: [
+            { name: 'ランチボックス', price: 550, imageUrl: 'lunchb.jpg' },
+            { name: '2段ランチボックス', price: 770, imageUrl: 'lunch2.jpg' },
+            { name: 'わっぱ風ランチボックス', price: 770, imageUrl: 'lunchw.jpg' }
           ]},
-           { name: '水筒・タンブラー',imageUrl:'wrap.jpg', products: [
-            { name: '水筒（ホワイト）', price: 150, imageUrl: 'wrap.jpg' },
-            { name: '水筒（ブラック）', price: 120, imageUrl: 'catrary.jpg' },
-            { name: 'タンブラー（ホワイト）', price: 120, imageUrl: 'catrary.jpg' },
-            { name: 'タンブラー（ブラック）', price: 120, imageUrl: 'pod.jpg' }
+          { name: '水筒・タンブラー',imageUrl:'water.jpg', products: [
+            { name: '水筒（ホワイト）', price: 880, imageUrl: 'suitow.jpg' },
+            { name: '水筒（ブラック）', price: 880, imageUrl: 'suitob.jpg' },
+            { name: 'タンブラー（ホワイト）', price: 660, imageUrl: 'tamw.jpg' },
+            { name: 'タンブラー（ブラック）', price: 660, imageUrl: 'tamb.jpg' }
           ]},
-           { name: '容器・ボウル',imageUrl:'wrap.jpg', products: [
-            { name: '保存容器', price: 150, imageUrl: 'wrap.jpg' },
-            { name: 'ボウル', price: 120, imageUrl: 'catrary.jpg' },
-            { name: 'ざる', price: 120, imageUrl: 'pod.jpg' }
+          { name: '容器・ボウル',imageUrl:'bowl.jpg', products: [
+            { name: '保存容器', price: 660, imageUrl: 'hyouki.jpg' },
+            { name: 'ボウル', price: 330, imageUrl: 'bowl.jpg' },
+            { name: 'ざる', price: 330, imageUrl: 'zaru.jpg' }
           ]},
-           { name: 'コースター・ランチョンマット',imageUrl:'wrap.jpg', products: [
-            { name: 'カップコースター', price: 150, imageUrl: 'wrap.jpg' },
-            { name: 'ランチョンマット（ベージュ）', price: 120, imageUrl: 'catrary.jpg' },
-            { name: 'ランチョンマット（ブラック）', price: 120, imageUrl: 'pod.jpg' }
+          { name: 'コースター・ランチョンマット',imageUrl:'coasterlunch.jpg', products: [
+            { name: 'カップコースター', price: 330, imageUrl: 'coster.jpg' },
+            { name: 'ランチョンマット', price: 330, imageUrl: 'lunchm.jpg' }
           ]}
-        ],},
+        ],
+      },
       { 
         id: 'shuno', 
         name: '収納', 
         imageUrl: 'shuno.jpg',
         subcategories:[
           { name: '収納ボックス',imageUrl:'tool.jpg', products: [
-            { name: 'S', price: 150, imageUrl: 'fpan.jpg' },
-            { name: 'M', price: 140, imageUrl: 'nabe.jpg' },
-            { name: 'L', price: 130, imageUrl: 'cutting.jpg' }
+            { name: 'S', price: 550, imageUrl: 'box.jpg' },
+            { name: 'M', price: 880, imageUrl: 'box.jpg' },
+            { name: 'L', price: 1320, imageUrl: 'box.jpg' }
           ]},
           { name: 'バスケット・カゴ',imageUrl:'tool.jpg', products: [
-            { name: 'バスケット（楕円）', price: 150, imageUrl: 'fpan.jpg' },
-            { name: 'バスケット（四角）', price: 140, imageUrl: 'nabe.jpg' },
-            { name: 'カゴ（楕円）', price: 140, imageUrl: 'nabe.jpg' },
-            { name: 'カゴ（四角）', price: 130, imageUrl: 'cutting.jpg' }
+            { name: 'バスケット', price: 1320, imageUrl: 'busket.jpg' },
+            { name: 'カゴ', price: 1100, imageUrl: 'kago.jpg' }
           ]},
           { name: 'ラック',imageUrl:'tool.jpg', products: [
-            { name: 'ラック（ホワイト）', price: 150, imageUrl: 'fpan.jpg' },
-            { name: 'ラック（ブラック）', price: 140, imageUrl: 'nabe.jpg' }
+            { name: 'ラック（ホワイト）', price: 330, imageUrl: 'luckw.jpg' },
+            { name: 'ラック（ブラック）', price: 330, imageUrl: 'luckb.jpg' }
           ]},
           { name: 'ハンガー',imageUrl:'tool.jpg', products: [
-            { name: 'ハンガー（4本）', price: 150, imageUrl: 'fpan.jpg' },
-            { name: 'ハンガー（6本）', price: 140, imageUrl: 'nabe.jpg' },
-            { name: 'ピンチハンガー（ピンチ6つ）', price: 130, imageUrl: 'cutting.jpg' },
-            { name: 'ピンチハンガー（ピンチ8つ）', price: 130, imageUrl: 'cutting.jpg' }
+            { name: 'ハンガー（4本）', price: 550, imageUrl: 'hung4.jpg' },
+            { name: 'ハンガー（6本）', price: 660, imageUrl: 'hung6.jpg' },
+            { name: 'ピンチハンガー（ピンチ6つ）', price: 700, imageUrl: 'phung.jpg' },
+            { name: 'ピンチハンガー（ピンチ8つ）', price: 800, imageUrl: 'phung.jpg' }
           ]},
           { name: 'アクセサリートレー',imageUrl:'tool.jpg', products: [
-            { name: 'アクササリートレー（ホワイト）', price: 150, imageUrl: 'fpan.jpg' },
-            { name: 'アクセサリートレー（ブラック）', price: 130, imageUrl: 'cutting.jpg' }
-          ]},
-      ]},
+            { name: 'アクササリートレー（ホワイト）', price: 330, imageUrl: 'torew.jpg' },
+            { name: 'アクセサリートレー（ウッド）', price: 330, imageUrl: 'torewo.jpg' }
+          ]}
+        ]
+      },
       { 
         id: 'interia', 
         name: 'インテリア', 
         imageUrl: 'interia.jpg',
         subcategories:[
           { name: 'カーテン',imageUrl:'tool.jpg', products: [
-            { name: 'ミニカーテン（ホワイト）', price: 150, imageUrl: 'fpan.jpg' },
-            { name: 'ミニカーテン（ブラック）', price: 150, imageUrl: 'fpan.jpg' },
-            { name: 'カーテン（ホワイト）', price: 150, imageUrl: 'fpan.jpg' },
-            { name: 'カーテン（ブラック）', price: 150, imageUrl: 'fpan.jpg' },
-            { name: '突っ張り棒（M）', price: 140, imageUrl: 'nabe.jpg' },
-            { name: '突っ張り棒（L）', price: 130, imageUrl: 'cutting.jpg' }
+            { name: 'ミニカーテン（ホワイト）', price: 550, imageUrl: 'katenw.jpg' },
+            { name: 'ミニカーテン（グレー）', price: 550, imageUrl: 'kateng.jpg' },
           ]},
-          /* ...（省略せずそのまま残りのサブカテゴリ）... */
           { name: '時計',imageUrl:'tool.jpg', products: [
-            { name: '時計（ホワイト）', price: 150, imageUrl: 'fpan.jpg' },
-            { name: '時計（ブラック）', price: 140, imageUrl: 'nabe.jpg' },
-            { name: '時計（グレー）', price: 140, imageUrl: 'nabe.jpg' }
+            { name: '時計（ホワイト）', price: 770, imageUrl: 'fpan.jpg' },
+            { name: '時計（ブラック）', price: 770, imageUrl: 'nabe.jpg' }
           ]}
-      ]},
+        ]
+      },
       { 
         id: 'fashion', 
         name: 'ファッション雑貨・小物', 
         imageUrl: 'fashion.jpg',
         subcategories:[
           { name: 'ファッション雑貨',imageUrl:'tool.jpg', products: [
-            { name: 'ベルト', price: 150, imageUrl: 'fpan.jpg' },
-            { name: 'サングラス', price: 140, imageUrl: 'nabe.jpg' },
-            { name: 'めがね', price: 140, imageUrl: 'nabe.jpg' },
-            { name: '帽子', price: 140, imageUrl: 'nabe.jpg' },
-            { name: 'マスク', price: 140, imageUrl: 'nabe.jpg' }
+            { name: 'ベルト', price: 330, imageUrl: 'belt.jpg' },
+            { name: 'サングラス', price: 1100, imageUrl: 'sunglass.jpg' },
+            { name: 'めがね', price: 550, imageUrl: 'glass.jpg' },
+            { name: '帽子', price: 1320, imageUrl: 'cap.jpg' },
+            { name: 'マスク', price: 330, imageUrl: 'mask.jpg' }
           ]},
           { name: '傘',imageUrl:'tool.jpg', products: [
-            { name: '傘', price: 150, imageUrl: 'fpan.jpg' },
-            { name: '財布', price: 140, imageUrl: 'nabe.jpg' },
-            { name: 'コインケース', price: 140, imageUrl: 'nabe.jpg' },
-            { name: 'ハンカチ', price: 140, imageUrl: 'nabe.jpg' },
-            { name: 'ポーチ', price: 140, imageUrl: 'nabe.jpg' },
-            { name: 'パスケース', price: 130, imageUrl: 'cutting.jpg' }
+            { name: '傘', price: 2420, imageUrl: 'kasa.jpg' },
+            { name: '財布', price: 330, imageUrl: 'saihu.jpg' },
+            { name: 'コインケース', price: 330, imageUrl: 'coin.jpg' },
+            { name: 'ハンカチ', price: 330, imageUrl: 'hankachi.jpg' },
+            { name: 'ポーチ', price: 660, imageUrl: 'pouch.jpg' },
+            { name: 'パスケース', price: 330, imageUrl: 'passcase.jpg' }
           ]}
-        ] },
+        ]
+      },
       { 
         id: 'device', 
         name: '家電・デバイス', 
         imageUrl: 'device.jpg',
         subcategories:[
           { name: '電池',imageUrl:'tool.jpg', products: [
-            { name: '単3', price: 150, imageUrl: 'fpan.jpg' },
-            { name: '単４', price: 140, imageUrl: 'nabe.jpg' },
-            { name: 'ボタン電池', price: 130, imageUrl: 'cutting.jpg' }
+            { name: '単3', price: 140, imageUrl: 'tan3.jpg' },
+            { name: '単４', price: 140, imageUrl: 'tan3.jpg' },
+            { name: 'ボタン電池', price: 130, imageUrl: 'botan.jpg' }
           ]},
           { name: '照明',imageUrl:'tool.jpg', products: [
-            { name: 'ライト（ホワイト）', price: 150, imageUrl: 'fpan.jpg' },
-            { name: 'ライト（ブラック）', price: 140, imageUrl: 'nabe.jpg' },
-            { name: 'ランプシェード', price: 130, imageUrl: 'cutting.jpg' }
+            { name: 'ライト（ホワイト）', price: 330, imageUrl: 'lightw.jpg' },
+            { name: 'ライト（ブラック）', price: 330, imageUrl: 'lightb.jpg' },
+            { name: 'ランプシェード', price: 880, imageUrl: 'lampshade.jpg' }
           ]},
           { name: 'イヤホン',imageUrl:'tool.jpg', products: [
-            { name: '有線イヤホン（ホワイト）', price: 150, imageUrl: 'fpan.jpg' },
-            { name: '有線イヤホン（ブラック）', price: 150, imageUrl: 'fpan.jpg' },
-            { name: 'Bluetoothイヤホン（ホワイト）', price: 140, imageUrl: 'nabe.jpg' },
-            { name: 'Bluetoothイヤホン（ブラック）', price: 140, imageUrl: 'nabe.jpg' }
+            { name: '有線イヤホン（ホワイト）', price: 550, imageUrl: 'yusenw.jpg' },
+            { name: 'Bluetoothイヤホン（ホワイト）', price: 2200, imageUrl: 'bluetoothw.jpg' },
+            { name: 'ヘッドフォン（ホワイト）', price: 3850, imageUrl: 'headphonew.jpg' }
           ]}
         ] 
       }
     ];
-    
-    const INITIAL_POINTS = 500;
-    const SHEET_ENDPOINT = 'https://script.google.com/macros/s/AKfycbyz9B50dQASG2Zd2-PvGf0D_I4oRQSrYC3l35NUzE3BLxpKzVT5rWC7Or7zFYBVkrK8/exec';
-    const ENABLE_SHEET_SYNC = Boolean(SHEET_ENDPOINT && SHEET_ENDPOINT.startsWith('https://')); 
 
-    // --- 計測用データ構造 ---
+    const INITIAL_POINTS = 1500;
+    const SHEET_ENDPOINT = 'https://script.google.com/macros/s/AKfycbyz9B50dQASG2Zd2-PvGf0D_I4oRQSrYC3l35NUzE3BLxpKzVT5rWC7Or7zFYBVkrK8/exec';
+    const ENABLE_SHEET_SYNC = Boolean(SHEET_ENDPOINT && SHEET_ENDPOINT.startsWith('https://'));
+
     const experimentData = {
-      participant_id: (typeof crypto !== 'undefined' && crypto.randomUUID) ? crypto.randomUUID() : ('id-' + Date.now() + '-' + Math.floor(Math.random()*10000)),
+      participant_id: (crypto?.randomUUID ? crypto.randomUUID() : `id-${Date.now()}`),
       start_time_iso: null,
-      end_time_iso: null,
+      close_points_time_iso: null,
+      pay_time_iso: null,
       total_time_ms: null,
       events: [],
+      cart: [],
       purchases: [],
       cart_history: [],
-      category_times: {},
-      _category_open_ts: {},
-      product_detail_times: {},
-      _product_open_ts: {},
-      cart: [],
+      product_detail_count: 0,
       click_count: 0,
-      product_detail_count: 0
+      customer: {},
+      survey: {}
     };
 
-    // 初期化
-    (function init(){
-      CATEGORIES.forEach(cat => {
-        experimentData.category_times[cat.id] = 0;
-      });
-      const q5 = document.getElementById('q5');
-      for (let i=1;i<=10;i++){
-        const o = document.createElement('option'); o.value = i; o.textContent = i; q5.appendChild(o);
-      }
-      document.getElementById('points-num').innerText = 0;
-      document.getElementById('cart-points').innerText = 0;
-    })();
-
-    // --- ユーティリティ ---
-    function nowISO(){ return (new Date()).toISOString(); }
-    function pushEvent(type, detail = {}) {
-      experimentData.events.push({ type, ts: nowISO(), detail });
-    }
-
-    // --- UI 要素参照 ---
-    const startBtn = document.getElementById('start-btn');
-    const startArea = document.getElementById('start-area');
-    const shopArea = document.getElementById('shop-area');
+    const views = {
+      start: document.getElementById('view-start'),
+      shop: document.getElementById('view-shop'),
+      checkout: document.getElementById('view-checkout'),
+      survey: document.getElementById('view-survey')
+    };
+    const pointsDisplay = document.getElementById('points-display');
+    const pointsNum = document.getElementById('points-num');
+    const cartPointsDisp = document.getElementById('cart-points');
     const pointsPanel = document.getElementById('points-panel');
     const closePointsBtn = document.getElementById('close-points');
-    const pointsNum = document.getElementById('points-num');
-    const points500 = document.getElementById('points-500');
+    const pointsAmount = document.getElementById('points-amount');
+    const startBtn = document.getElementById('start-btn');
     const categoriesDiv = document.getElementById('categories');
     const modalBackdrop = document.getElementById('modal-backdrop');
     const detailModal = document.getElementById('detail-modal');
@@ -434,510 +438,380 @@
     const detailName = document.getElementById('detail-name');
     const detailDesc = document.getElementById('detail-desc');
     const detailPrice = document.getElementById('detail-price');
-    const addToCartBtn = document.getElementById('add-to-cart-btn');
-    const detailCloseBtn = document.getElementById('detail-close');
-    const detailBackBtn = document.getElementById('detail-back-btn');
     const pointsStatus = document.getElementById('points-status');
-    const cartFloating = document.getElementById('cart-floating');
-    const cartView = document.getElementById('cart-view');
-    const pointsDisplay = document.getElementById('points-display');
-    const cartList = document.getElementById('cart-list');
-    const cartTotal = document.getElementById('cart-total');
-    const cartPointsDisp = document.getElementById('cart-points');
-    const payBtn = document.getElementById('pay-btn');
-    const backToShopBtn = document.getElementById('back-to-shop-btn');
-    const survey = document.getElementById('survey');
-    const submitSurveyBtn = document.getElementById('submit-survey');
-    const finalMsg = document.getElementById('final-msg');
-
-    // 数量選択
     const qtyDisplay = document.getElementById('qty-display');
     const qtyMinus = document.getElementById('qty-minus');
     const qtyPlus = document.getElementById('qty-plus');
-    let currentQuantity = 1;
-    let currentProductPrice = 0;
+    const addToCartBtn = document.getElementById('add-to-cart-btn');
+    const detailCloseBtn = document.getElementById('detail-close');
+    const detailBackBtn = document.getElementById('detail-back-btn');
+    const cartFloating = document.getElementById('cart-floating');
+    const cartView = document.getElementById('cart-view');
+    const cartList = document.getElementById('cart-list');
+    const cartTotal = document.getElementById('cart-total');
+    const backToShopBtn = document.getElementById('back-to-shop-btn');
+    const toCheckoutBtn = document.getElementById('to-checkout-btn');
+    const checkoutItems = document.getElementById('checkout-items');
+    const checkoutTotal = document.getElementById('checkout-total');
+    const checkoutRemain = document.getElementById('checkout-remain');
+    const payBtn = document.getElementById('pay-btn');
+    const submitSurveyBtn = document.getElementById('submit-survey');
+    const finalMsg = document.getElementById('final-msg');
 
-    // state
-    let hasStarted = false;
-    let pointsVisible = false;
-    let pointsPanelClosed = false;
     let pointsOwned = 0;
+    let hasStarted = false;
     let hasPaid = false;
-    let cartViewOpened = false;
+    let currentProduct = null;
+    let currentProductPrice = 0;
+    let currentQty = 1;
+    let canShowCartButton = false;     // ×後にtrue
+    let cartButtonAlreadyUsed = false; // 1回押したらtrue
 
-    let currentDetailProduct = null;
-    let currentCategoryId = null;
+    function nowISO(){ return new Date().toISOString(); }
+    function pushEvent(type, detail={}){ experimentData.events.push({type, ts:nowISO(), detail}); }
+    function showView(name){
+      Object.values(views).forEach(v => v.classList.remove('active'));
+      views[name].classList.add('active');
+      window.scrollTo({top:0,behavior:'smooth'});
+      pointsDisplay.style.display = (name === 'start') ? 'none' : 'block'; // スタート画面は非表示
+    }
+    function getProductPrice(name){
+      for (const c of CATEGORIES) for (const s of c.subcategories||[]) for (const p of s.products||[]) if (p.name===name) return p.price;
+      return 0;
+    }
+    function calcCartTotal(){ return experimentData.cart.reduce((sum,n)=>sum+getProductPrice(n),0); }
 
-    // --- イベントバインド: スタート ---
-    startBtn.addEventListener('click', () => {
-      if (hasStarted) return;
+    function make7Scale(containerId, qName){
+      const root = document.getElementById(containerId);
+      root.innerHTML = '';
+      for(let i=1;i<=7;i++){
+        const label = document.createElement('label');
+        label.innerHTML = `<input type="radio" name="${qName}" value="${i}"><span>${i}</span>`;
+        root.appendChild(label);
+      }
+    }
+    function makeMultiScale(parentId, defs, prefix){
+      const parent = document.getElementById(parentId);
+      parent.innerHTML = '';
+      defs.forEach((d, idx) => {
+        const block = document.createElement('div');
+        block.style.margin = '12px 0';
+        block.innerHTML = `
+          <div style="font-weight:700;margin-bottom:6px;">${prefix}-${idx+1}：${d.title}</div>
+          <div class="sd-scale-wrap">
+            <div class="sd-left">${d.left}</div>
+            <div class="sd-scale" id="${prefix.toLowerCase()}_${idx+1}"></div>
+            <div class="sd-right">${d.right}</div>
+          </div>
+        `;
+        parent.appendChild(block);
+        const scale = block.querySelector('.sd-scale');
+        for(let i=1;i<=7;i++){
+          const label = document.createElement('label');
+          label.innerHTML = `<input type="radio" name="${prefix.toLowerCase()}_${idx+1}" value="${i}"><span>${i}</span>`;
+          scale.appendChild(label);
+        }
+      });
+    }
+
+    (function init(){
+      pointsNum.textContent = 0;
+      cartPointsDisp.textContent = 0;
+      pointsAmount.textContent = INITIAL_POINTS;
+      make7Scale('q1-scale','q1');
+      make7Scale('q4-scale','q4');
+      makeMultiScale('q2-group',[
+        {title:'いろいろ考えて決めた',left:'いろいろ考えて決めた',right:'なんとなく決めた'},
+        {title:'「これがよさそう」と思って決めた',left:'「これがよさそう」と思って決めた',right:'「これが欲しい」と思って決めた'},
+        {title:'慎重に決めた',left:'慎重に決めた',right:'直感的に決めた'},
+        {title:'理由を考えて決めた',left:'理由を考えて決めた',right:'気分で決めた'},
+        {title:'頭で考えて決めた',left:'頭で考えて決めた',right:'気持ちで決めた'}
+      ],'Q2');
+      makeMultiScale('q3-group',[
+        {title:'いろいろ考えて決める',left:'いろいろ考えて決める',right:'なんとなく決める'},
+        {title:'「これがよさそう」と思って決める',left:'「これがよさそう」と思って決める',right:'「これが欲しい」と思って決める'},
+        {title:'慎重に決める',left:'慎重に決める',right:'直感的に決める'},
+        {title:'理由を考えて決める',left:'理由を考えて決める',right:'気分で決める'},
+        {title:'頭で考えて決める',left:'頭で考えて決める',right:'気持ちで決める'}
+      ],'Q3');
+      showView('start');
+    })();
+
+    startBtn.addEventListener('click',()=>{
+      if(hasStarted) return;
       hasStarted = true;
       experimentData.start_time_iso = nowISO();
-      pushEvent('experiment_start');
-      startArea.style.display = 'none';
-      shopArea.style.display = 'block';
       pointsOwned = INITIAL_POINTS;
-      pointsNum.innerText = pointsOwned;
-      cartPointsDisp.innerText = pointsOwned;
-      points500.innerText = pointsOwned;
-      pointsStatus.innerText = `現在のポイント残高: ${pointsOwned}pt`;
+      pointsNum.textContent = pointsOwned;
+      cartPointsDisp.textContent = pointsOwned;
       pointsPanel.style.display = 'flex';
-      pointsVisible = true;
       renderCategories();
-      window.addEventListener('scroll', onScrollShowCart);
-      document.addEventListener('click', () => experimentData.click_count++);
+      showView('shop');
+      pushEvent('experiment_start');
+      document.addEventListener('click', ()=>experimentData.click_count++);
     });
 
-    // close points panel
-    closePointsBtn.addEventListener('click', () => {
+    closePointsBtn.addEventListener('click',()=>{
       pointsPanel.style.display = 'none';
-      pointsPanelClosed = true;
+      experimentData.close_points_time_iso = nowISO();
       pushEvent('points_panel_closed');
+
+      // ×を押してから、カートボタン表示を許可
+      canShowCartButton = true;
+      cartButtonAlreadyUsed = false;
+      cartFloating.style.display = 'block';
     });
 
-    // --- カテゴリ描画 ---
     function renderCategories(){
       categoriesDiv.innerHTML = '';
-      CATEGORIES.forEach(cat => {
+      CATEGORIES.forEach(cat=>{
         const card = document.createElement('div');
         card.className = 'cat-card';
-        
-        // カテゴリ画像
-        const catImage = document.createElement('div');
-        catImage.className = 'cat-image';
-        if (cat.imageUrl) {
-          catImage.style.backgroundImage = `url('images/${cat.imageUrl}')`;
-          catImage.style.backgroundSize = 'cover';
-          catImage.style.backgroundPosition = 'center';
-          catImage.textContent = '';
-        } else {
-          catImage.textContent = 'カテゴリ画像';
-        }
-        
-        const header = document.createElement('div');
-        header.className = 'cat-title';
-        header.innerHTML = `<span>${cat.name}</span><span class="cat-toggle">▶</span>`;
-        const prodDiv = document.createElement('div');
-        prodDiv.className = 'cat-products';
-        
-        // --- 重要修正: カテゴリ内の商品は subcategories の中にある構造に対応 ---
-        const subcats = Array.isArray(cat.subcategories) ? cat.subcategories : (Array.isArray(cat.products) ? [{ name: '', products: cat.products }] : []);
-        subcats.forEach(sub => {
-          if (sub.name) {
-            const subTitle = document.createElement('div');
-            subTitle.style.fontWeight = '700';
-            subTitle.style.marginBottom = '6px';
-            subTitle.textContent = sub.name;
-            prodDiv.appendChild(subTitle);
-          }
-          if (Array.isArray(sub.products)) {
-            sub.products.forEach(p => {
-              const row = document.createElement('div');
-              row.className = 'product-item';
-              const left = document.createElement('div'); 
-              left.textContent = `${p.name} (${p.price}円)`;
-              const right = document.createElement('div');
-              const viewBtn = document.createElement('button'); viewBtn.type='button';
-              viewBtn.textContent = '詳細';
-              viewBtn.addEventListener('click', (e) => {
-                e.stopPropagation();
-                openProductDetail(cat.id, p);
-              });
-              right.appendChild(viewBtn);
-              row.appendChild(left); row.appendChild(right);
-              prodDiv.appendChild(row);
-            });
-          }
+        card.innerHTML = `<div class="cat-image"></div><div class="cat-title"><span>${cat.name}</span><span>▶</span></div><div class="cat-products"></div>`;
+        const img = card.querySelector('.cat-image');
+        if(cat.imageUrl) img.style.backgroundImage = `url('images/${cat.imageUrl}')`;
+
+        const prodDiv = card.querySelector('.cat-products');
+        (cat.subcategories||[]).forEach(sub=>{
+          const t = document.createElement('div');
+          t.style.fontWeight='700'; t.style.margin='4px 0 6px'; t.textContent = sub.name;
+          prodDiv.appendChild(t);
+
+          (sub.products||[]).forEach(p=>{
+            const row = document.createElement('div');
+            row.className='product-item';
+            row.innerHTML = `<div>${p.name} (${p.price}円)</div>`;
+            const r = document.createElement('div');
+            const btn = document.createElement('button');
+            btn.type='button'; btn.textContent='詳細';
+            btn.addEventListener('click',(e)=>{ e.stopPropagation(); openDetail(p); });
+            r.appendChild(btn);
+            row.appendChild(r);
+            prodDiv.appendChild(row);
+          });
         });
 
-        card.addEventListener('click', () => {
-          const open = prodDiv.style.display === 'block';
-          if (open){
-            closeCategory(cat.id);
-            prodDiv.style.display = 'none';
-          } else {
-            if (currentCategoryId && currentCategoryId !== cat.id) {
-              closeCategory(currentCategoryId);
-              const prevCard = document.querySelector(`.cat-card[data-id="${currentCategoryId}"]`);
-              if (prevCard) prevCard.querySelector('.cat-products').style.display = 'none';
-            }
-            openCategory(cat.id);
-            prodDiv.style.display = 'block';
-          }
+        card.addEventListener('click',()=>{
+          prodDiv.style.display = (prodDiv.style.display==='block') ? 'none' : 'block';
         });
-
-        header.addEventListener('click', (e) => {
-          e.stopPropagation();
-          const open = prodDiv.style.display === 'block';
-          if (open){
-            closeCategory(cat.id);
-            prodDiv.style.display = 'none';
-          } else {
-            if (currentCategoryId && currentCategoryId !== cat.id) {
-              closeCategory(currentCategoryId);
-              const prevCard = document.querySelector(`.cat-card[data-id="${currentCategoryId}"]`);
-              if (prevCard) prevCard.querySelector('.cat-products').style.display = 'none'; }
-            openCategory(cat.id);
-            prodDiv.style.display = 'block';  }});
-
-        card.appendChild(catImage);
-        card.appendChild(header);
-        card.appendChild(prodDiv);
-        card.setAttribute('data-id', cat.id);
         categoriesDiv.appendChild(card);
       });
     }
 
-    function openCategory(catId){
-      currentCategoryId = catId;
-      experimentData._category_open_ts[catId] = Date.now();
-      pushEvent('category_open', { catId });
-    }
-    
-    function closeCategory(catId){
-      const ts = experimentData._category_open_ts[catId];
-      if (ts){
-        const elapsed = Date.now() - ts;
-        experimentData.category_times[catId] = (experimentData.category_times[catId] || 0) + elapsed;
-        delete experimentData._category_open_ts[catId];
-        pushEvent('category_close', { catId, elapsed_ms: elapsed });
-      }
-      if (currentCategoryId === catId) currentCategoryId = null;
-    }
-
-    // --- 商品詳細表示（モーダル） ---
-    function openProductDetail(catId, productObj){
-      if (currentDetailProduct) closeProductDetail(currentDetailProduct);
-      currentDetailProduct = productObj.name;
-      currentProductPrice = productObj.price;
-      currentQuantity = 1;
-      qtyDisplay.textContent = currentQuantity;
-      
-      experimentData._product_open_ts[productObj.name] = Date.now();
-      experimentData.product_detail_count++;
-      pushEvent('product_detail_open', { product: productObj.name, catId });
-
-      // 製品画像
-      if (productObj.imageUrl) {
-        modalImage.style.backgroundImage = `url('images/${productObj.imageUrl}')`;
-        modalImage.style.backgroundSize = 'cover';
-        modalImage.style.backgroundPosition = 'center';
-        modalImage.textContent = '';
-      } else {
+    function openDetail(p){
+      currentProduct = p.name;
+      currentProductPrice = p.price;
+      currentQty = 1;
+      qtyDisplay.textContent = 1;
+      detailName.textContent = p.name;
+      detailDesc.textContent = `${p.name} の詳細情報です。`;
+      detailPrice.textContent = p.price;
+      pointsStatus.textContent = `現在のポイント残高: ${pointsOwned}pt`;
+      addToCartBtn.textContent = `カートに追加（${p.price}円）`;
+      if(p.imageUrl){
+        modalImage.style.backgroundImage = `url('images/${p.imageUrl}')`;
+        modalImage.textContent='';
+      }else{
         modalImage.style.backgroundImage = '';
-        modalImage.textContent = '製品画像';
+        modalImage.textContent='画像';
       }
-      
-      detailName.textContent = productObj.name;
-      detailDesc.textContent = productObj.name + ' の詳細情報です。材料や特徴をここに表示できます。';
-      detailPrice.textContent = currentProductPrice;
-      addToCartBtn.textContent = `カートに追加（${currentProductPrice}円）`;
-      pointsStatus.innerText = `現在のポイント残高: ${pointsOwned}pt`;
-      modalBackdrop.style.display = 'flex';
-      try { detailModal.focus(); } catch (e) { /* noop */ }
+      experimentData.product_detail_count++;
+      pushEvent('product_detail_open',{product:p.name});
+      modalBackdrop.style.display='flex';
+      detailModal.focus();
     }
-    
-    function closeProductDetail(productName){
-      const ts = experimentData._product_open_ts[productName];
-      if (ts){
-        const elapsed = Date.now() - ts;
-        experimentData.product_detail_times[productName] = (experimentData.product_detail_times[productName] || 0) + elapsed;
-        delete experimentData._product_open_ts[productName];
-        pushEvent('product_detail_close', { product: productName, elapsed_ms: elapsed });
-      }
-      currentDetailProduct = null;
-      modalBackdrop.style.display = 'none';
+    function closeDetail(){
+      if(currentProduct) pushEvent('product_detail_close',{product:currentProduct});
+      currentProduct = null;
+      modalBackdrop.style.display='none';
     }
 
-    detailCloseBtn.addEventListener('click', () => {
-      if (currentDetailProduct) closeProductDetail(currentDetailProduct);
-    });
-    detailBackBtn.addEventListener('click', () => {
-      if (currentDetailProduct) closeProductDetail(currentDetailProduct);
-    });
-    
-    modalBackdrop.addEventListener('click', (e) => {
-      if (e.target === modalBackdrop && currentDetailProduct) closeProductDetail(currentDetailProduct);
-    });
-
-    // 数量選択のイベント
-    qtyMinus.addEventListener('click', () => {
-      if (currentQuantity > 1) {
-        currentQuantity--;
-        qtyDisplay.textContent = currentQuantity;
-        addToCartBtn.textContent = `カートに追加（${currentProductPrice * currentQuantity}円）`;
+    qtyMinus.addEventListener('click',()=>{
+      if(currentQty>1){
+        currentQty--;
+        qtyDisplay.textContent=currentQty;
+        addToCartBtn.textContent = `カートに追加（${currentProductPrice*currentQty}円）`;
       }
     });
-
-    qtyPlus.addEventListener('click', () => {
-      currentQuantity++;
-      qtyDisplay.textContent = currentQuantity;
-      addToCartBtn.textContent = `カートに追加（${currentProductPrice * currentQuantity}円）`;
+    qtyPlus.addEventListener('click',()=>{
+      currentQty++;
+      qtyDisplay.textContent=currentQty;
+      addToCartBtn.textContent = `カートに追加（${currentProductPrice*currentQty}円）`;
     });
 
-    // add to cart
-    addToCartBtn.addEventListener('click', () => {
-      if (!currentDetailProduct) return;
-
-      const totalPrice = currentProductPrice * currentQuantity;
-      
-      if (pointsOwned < totalPrice) {  
-        alert('ポイントが不足しています。'); 
-        return; 
-      }
-
-      pointsOwned -= totalPrice;
-      
-      // 数量分だけカートに追加（商品名のみ保存）
-      for (let i = 0; i < currentQuantity; i++) {
-        experimentData.cart.push(currentDetailProduct);
-      }
-
-      experimentData.cart_history.push({ action: 'add', name: currentDetailProduct, price: totalPrice, remaining_points: pointsOwned, ts: nowISO() });
-      pushEvent('cart_add', { product: currentDetailProduct, price: totalPrice, remaining_points: pointsOwned});
-
-      pointsNum.innerText = pointsOwned;
-      cartPointsDisp.innerText = pointsOwned;
-      pointsStatus.innerText = `現在のポイント残高: ${pointsOwned}pt`;
+    addToCartBtn.addEventListener('click',()=>{
+      if(!currentProduct) return;
+      const total = currentProductPrice*currentQty;
+      if(pointsOwned < total){ alert('ポイントが不足しています。'); return; }
+      pointsOwned -= total;
+      for(let i=0;i<currentQty;i++) experimentData.cart.push(currentProduct);
+      experimentData.cart_history.push({action:'add',name:currentProduct,price:total,remaining_points:pointsOwned,ts:nowISO()});
+      pointsNum.textContent = pointsOwned;
+      cartPointsDisp.textContent = pointsOwned;
+      pointsStatus.textContent = `現在のポイント残高: ${pointsOwned}pt`;
       refreshCartUI();
-      alert( currentDetailProduct + ' を ' + currentQuantity + ' 個カートに追加しました。\n' + '残りポイント：' + pointsOwned + 'pt' );
-      closeProductDetail(currentDetailProduct);
+      alert(`${currentProduct} を ${currentQty} 個カートに追加しました。\n残りポイント：${pointsOwned}pt`);
+      closeDetail();
+      pushEvent('cart_add',{product:currentProduct,qty:currentQty,total});
     });
 
-    // refresh cart UI
+    detailCloseBtn.addEventListener('click',closeDetail);
+    detailBackBtn.addEventListener('click',closeDetail);
+    modalBackdrop.addEventListener('click',(e)=>{ if(e.target===modalBackdrop) closeDetail(); });
+
     function refreshCartUI(){
       cartList.innerHTML = '';
-      if (experimentData.cart.length === 0){
-        const p = document.createElement('div'); p.textContent = 'カートに商品がありません。'; cartList.appendChild(p);
-      } else {
-        experimentData.cart.forEach((pName, idx) => {
-          const row = document.createElement('div'); row.className = 'cart-row';
-          const left = document.createElement('div'); left.textContent = pName;
+      if(experimentData.cart.length===0){
+        cartList.innerHTML = '<div>カートに商品がありません。</div>';
+      }else{
+        experimentData.cart.forEach((name,idx)=>{
+          const row = document.createElement('div');
+          row.className = 'cart-row';
+          row.innerHTML = `<div>${name}</div>`;
           const right = document.createElement('div');
-          const del = document.createElement('button'); del.type='button'; del.textContent='削除';
-          del.addEventListener('click', (e) => {
-            e.stopPropagation();
-            
-            // 価格を取得して復元
-            const productPrice = getProductPrice(pName);
-            pointsOwned += productPrice;
-            
+          const del = document.createElement('button');
+          del.type='button'; del.textContent='削除';
+          del.addEventListener('click',()=>{
+            const price = getProductPrice(name);
+            pointsOwned += price;
             experimentData.cart.splice(idx,1);
-            experimentData.cart_history.push({ action:'remove', name: pName, ts: nowISO() });
-            pushEvent('cart_remove', { product: pName });
-            pointsNum.innerText = pointsOwned;
-            cartPointsDisp.innerText = pointsOwned;
+            experimentData.cart_history.push({action:'remove',name,price,remaining_points:pointsOwned,ts:nowISO()});
+            pointsNum.textContent = pointsOwned;
+            cartPointsDisp.textContent = pointsOwned;
             refreshCartUI();
-            checkCartScrollBottom();
           });
           right.appendChild(del);
-          row.appendChild(left); row.appendChild(right);
+          row.appendChild(right);
           cartList.appendChild(row);
         });
       }
-      const total = calculateCartTotal();
-      cartTotal.innerText = total;
-      cartPointsDisp.innerText = pointsOwned;
-      checkCartScrollBottom();
+      cartTotal.textContent = calcCartTotal();
+      cartPointsDisp.textContent = pointsOwned;
     }
 
-    // 商品名から価格を取得する関数（ネストされた subcategories に対応）
-    function getProductPrice(productName) {
-      for (let cat of CATEGORIES) {
-        // 既存の cat.products に対応（互換）
-        if (Array.isArray(cat.products)) {
-          for (let prod of cat.products) {
-            if (prod.name === productName) return prod.price;
-          }
-        }
-        // subcategories を探す
-        if (Array.isArray(cat.subcategories)) {
-          for (let sub of cat.subcategories) {
-            if (Array.isArray(sub.products)) {
-              for (let prod of sub.products) {
-                if (prod.name === productName) return prod.price;
-              }
-            }
-          }
-        }
-      }
-      return 0;
-    }
+    // カート確認ボタンは「×後〜1回押すまで」だけ表示
+    cartFloating.addEventListener('click',()=>{
+      if(!canShowCartButton || cartButtonAlreadyUsed) return;
 
-    // カート内の合計金額を計算
-    function calculateCartTotal() {
-      return experimentData.cart.reduce((sum, productName) => sum + getProductPrice(productName), 0);
-    }
-
-    // --- カート表示トリガ（スクロール到達で表示） ---
-    function onScrollShowCart(){
-      if (hasPaid) return;
-      cartFloating.style.display = 'block';
-    }
-    
-    cartFloating.addEventListener('click', () => {
-      cartViewOpened = true;
-      cartFloating.style.display = 'none';
-      cartView.style.display = 'block';
+      cartButtonAlreadyUsed = true;
+      cartFloating.style.display='none';
+      cartView.style.display='block';
       refreshCartUI();
-      cartView.scrollIntoView({ behavior: 'smooth' });
+      cartView.scrollIntoView({behavior:'smooth'});
       pushEvent('open_cart_view');
-      cartList.addEventListener('scroll', checkCartScrollBottom);
-      window.addEventListener('scroll', scrollCartViewIntoView);
     });
 
-    function scrollCartViewIntoView(){
-      if (cartView.style.display === 'block') cartView.scrollIntoView({ behavior:'smooth' });
-    }
-
-    function checkCartScrollBottom(){
-      if (cartView.style.display !== 'block') { payBtn.style.display='none'; return; }
-      const el = cartList;
-      const atBottomOfCart = (el.scrollHeight - el.scrollTop - el.clientHeight) <= 2;
-      const pageBottom = (window.innerHeight + window.scrollY) >= (document.body.offsetHeight - 50);
-      if (atBottomOfCart || pageBottom) {
-        payBtn.style.display = 'block';
-      } else {
-        payBtn.style.display = 'none';
-      }
-    }
-
-    // 「選びなおす」ボタン
-    backToShopBtn.addEventListener('click', () => {
-      cartViewOpened = false;
-      cartView.style.display = 'none';
-      cartFloating.style.display = 'block';
-      shopArea.scrollIntoView({ behavior: 'smooth' });
+    backToShopBtn.addEventListener('click',()=>{
+      cartView.style.display='none';
+      // 一回押した後は再表示しない
+      cartFloating.style.display='none';
       pushEvent('back_to_shop');
     });
 
-    // 支払い処理
-    payBtn.addEventListener('click', () => {
-      const total = calculateCartTotal();
-      
-      if (experimentData.cart.length === 0){
-        alert('カートに商品がありません');
-        return;
-      }
-      
-      const remainingPoints = INITIAL_POINTS - total;
-      
-      if (remainingPoints < 0){
-        alert('ポイントが不足しています。商品を選びなおしてください');
-        pushEvent('payment_failed_insufficient_points', { total, points: pointsOwned });
-        return;
-      }
-      
-      pointsDisplay.style.display = 'none';
-      pointsNum.innerText = pointsOwned;
-      cartPointsDisp.innerText = pointsOwned;
-
-      experimentData.purchases = experimentData.cart.slice();
-      pushEvent('payment_success', { total, purchases: experimentData.purchases.slice(), remaining_points: pointsOwned });
-      
-      experimentData.cart = [];
-      hasPaid = true;
-      cartView.style.display = 'none';
-      cartFloating.style.display = 'none';
-      payBtn.style.display = 'none';
-      shopArea.style.display = 'none';
-      survey.style.display = 'block';
-      survey.scrollIntoView({ behavior:'smooth' });
+    toCheckoutBtn.addEventListener('click',()=>{
+      if(experimentData.cart.length===0){ alert('カートに商品がありません'); return; }
+      renderCheckout();
+      showView('checkout');
+      cartFloating.style.display='none';
+      pushEvent('open_checkout');
     });
 
-    // --- サーベイ送信 ---
-    submitSurveyBtn.addEventListener('click', () => {
-      function getRadio(name){ const r = document.querySelector('input[name="'+name+'"]:checked'); return r ? r.value : ''; }
-      const q1 = getRadio('q1'); const q2 = getRadio('q2'); const q3 = getRadio('q3'); const q4 = getRadio('q4'); const q5 = document.getElementById('q5').value;
-      if (!q1 || !q2 || !q3 || !q4 || !q5) {
-        alert('全ての項目に回答してください。');
-        return;
-      }
-
-      Object.keys(experimentData._category_open_ts).forEach(catId => {
-        const ts = experimentData._category_open_ts[catId];
-        const elapsed = Date.now() - ts;
-        experimentData.category_times[catId] = (experimentData.category_times[catId] || 0) + elapsed;
+    function renderCheckout(){
+      const tally = {};
+      experimentData.cart.forEach(n=>{ tally[n] = (tally[n]||0)+1; });
+      checkoutItems.innerHTML = '';
+      Object.keys(tally).forEach(name=>{
+        const div = document.createElement('div');
+        div.style.padding='6px 0';
+        div.textContent = `${name} × ${tally[name]}（${getProductPrice(name)*tally[name]}pt）`;
+        checkoutItems.appendChild(div);
       });
-      experimentData._category_open_ts = {};
-      
-      Object.keys(experimentData._product_open_ts).forEach(prod => {
-        const ts = experimentData._product_open_ts[prod];
-        const elapsed = Date.now() - ts;
-        experimentData.product_detail_times[prod] = (experimentData.product_detail_times[prod] || 0) + elapsed;
-      });
-      experimentData._product_open_ts = {};
+      const total = calcCartTotal();
+      checkoutTotal.textContent = total;
+      checkoutRemain.textContent = pointsOwned;
+    }
 
-      experimentData.survey = { q1, q2, q3, q4, q5 };
+    payBtn.addEventListener('click',()=>{
+      const g = document.querySelector('input[name="gender"]:checked')?.value || '';
+      const age = document.getElementById('age-input').value.trim();
+      if(!g){ alert('性別を選択してください。'); return; }
+      if(!/^[0-9]+$/.test(age)){ alert('年齢は半角数字で入力してください。'); return; }
+
+      experimentData.customer = {gender:g, age:Number(age)};
+      experimentData.purchases = experimentData.cart.slice();
+
+      experimentData.pay_time_iso = nowISO();
+      experimentData.total_time_ms = experimentData.close_points_time_iso
+        ? Date.parse(experimentData.pay_time_iso) - Date.parse(experimentData.close_points_time_iso)
+        : null;
+
+      hasPaid = true;
+      pushEvent('payment_success',{
+        total:calcCartTotal(),
+        purchases:experimentData.purchases,
+        total_time_ms:experimentData.total_time_ms
+      });
+
+      showView('survey');
+    });
+
+    submitSurveyBtn.addEventListener('click',()=>{
+      function rv(name){ return document.querySelector(`input[name="${name}"]:checked`)?.value || ''; }
+
+      const survey = {
+        q1: rv('q1'),
+        q2_1: rv('q2_1'), q2_2: rv('q2_2'), q2_3: rv('q2_3'), q2_4: rv('q2_4'), q2_5: rv('q2_5'),
+        q3_1: rv('q3_1'), q3_2: rv('q3_2'), q3_3: rv('q3_3'), q3_4: rv('q3_4'), q3_5: rv('q3_5'),
+        q4: rv('q4')
+      };
+
+      if(!Object.values(survey).every(v=>v!=='')){ alert('すべての項目に回答してください。'); return; }
+
+      experimentData.survey = survey;
       experimentData.end_time_iso = nowISO();
-      experimentData.total_time_ms = Date.now() - Date.parse(experimentData.start_time_iso);
-
-      pushEvent('survey_submitted', { survey: experimentData.survey });
-
-      // total_time_ms を秒に変換
-      const categoryTimesStr = Object.keys(experimentData.category_times)
-        .map(catId => `${catId}: ${Math.round(experimentData.category_times[catId] / 1000)}秒`)
-        .join(', ');
-      
-      const productDetailTimesStr = Object.keys(experimentData.product_detail_times)
-        .map(prodName => `${prodName}: ${Math.round(experimentData.product_detail_times[prodName] / 1000)}秒`)
-        .join(', ');
-
-      const cartHistoryStr = experimentData.cart_history
-        .map(h => `${h.action}:${h.name}(${h.price}pt)@${h.ts}`)
-        .join(' | ');
+      pushEvent('survey_submitted',{survey});
 
       const dataToSend = {
         participant_id: experimentData.participant_id,
         start_time: experimentData.start_time_iso,
-        end_time: experimentData.end_time_iso,
-        total_time_s: Math.round(experimentData.total_time_ms / 1000),  // ミリ秒を秒に変換
+        close_points_time: experimentData.close_points_time_iso,
+        pay_time: experimentData.pay_time_iso,
+        total_time_s: experimentData.total_time_ms!=null ? Math.round(experimentData.total_time_ms/1000) : '',
+        customer_gender: experimentData.customer.gender,
+        customer_age: experimentData.customer.age,
         purchases: experimentData.purchases.join(', '),
-        cart_history: cartHistoryStr,
-        category_times: categoryTimesStr,
-        product_detail_times: productDetailTimesStr,
-        product_detail_count: experimentData.product_detail_count,
-        survey_q1: experimentData.survey.q1,
-        survey_q2: experimentData.survey.q2,
-        survey_q3: experimentData.survey.q3,
-        survey_q4: experimentData.survey.q4,
-        survey_q5: experimentData.survey.q5,
-        click_count: experimentData.click_count
+        click_count: experimentData.click_count,
+        ...survey
       };
 
-      if (ENABLE_SHEET_SYNC) {
+      function done(){
+        document.getElementById('view-survey').classList.remove('active');
+        finalMsg.style.display = 'block';
+      }
+
+      if(ENABLE_SHEET_SYNC){
         submitSurveyBtn.disabled = true;
         submitSurveyBtn.textContent = '送信中...';
-
-        fetch(SHEET_ENDPOINT, {
-          method: 'POST',
-          headers: { 'Content-Type': 'text/plain' },
-          body: JSON.stringify(dataToSend),
-          mode: 'no-cors'
-        })
-        .then(() => {
-          survey.style.display = 'none';
-          finalMsg.style.display = 'block';
-        })
-        .catch(err => {
-          console.error('送信エラー:', err);
-          alert('データの送信に失敗しました。もう一度お試しください。');
+        fetch(SHEET_ENDPOINT,{
+          method:'POST',
+          headers:{'Content-Type':'text/plain'},
+          body:JSON.stringify(dataToSend),
+          mode:'no-cors'
+        }).then(done).catch(()=>{
+          alert('データ送信に失敗しました。再度お試しください。');
           submitSurveyBtn.disabled = false;
           submitSurveyBtn.textContent = '回答を送信';
         });
-      } else {
-        survey.style.display = 'none';
-        finalMsg.style.display = 'block';
+      }else{
+        done();
       }
     });
 
-    window.addEventListener('beforeunload', (e) => {
-      if (experimentData.start_time_iso && !experimentData.end_time_iso){
+    window.addEventListener('beforeunload',()=>{
+      if(experimentData.start_time_iso && !experimentData.end_time_iso){
         pushEvent('unload_before_finish');
       }
     });
-
-    window.addEventListener('resize', onScrollShowCart);
   </script>
 </body>
 </html>
