@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>架空EC実験（再構成版）</title>
+  <title>Facsan online</title>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
   <style>
     :root{
@@ -34,6 +34,27 @@
     .start-area{text-align:center;padding:8px 0 16px;border-radius:var(--radius)}
     .start-area button{font-size:20px;padding:14px 26px;margin-top:14px}
 
+    /* 注意事項 */
+    .start-notice{
+      margin:18px auto 0;
+      max-width:720px;
+      text-align:left;
+      background:#fafafa;
+      border:1px solid #ddd;
+      border-radius:10px;
+      padding:12px 14px;
+      line-height:1.7;
+      font-size:14px;
+    }
+    .start-notice-title{
+      font-size:18px; /* スタート(20px)より小さく */
+      font-weight:700;
+      margin:0 0 6px 0;
+      text-align:center;
+    }
+    .start-notice ul{margin:0;padding-left:1.2em}
+    .start-notice li{margin:2px 0}
+
     /* ===== 専用カルーセル ===== */
     .ecx-carousel{
       width:100%;
@@ -49,7 +70,6 @@
       will-change:transform;transition:transform .55s ease;
     }
 
-    /* PC基準 */
     .ecx-slide{
       flex:0 0 76%;
       margin:0 1.5%;
@@ -79,7 +99,6 @@
     .ecx-arrow.ecx-prev{left:2.4%}
     .ecx-arrow.ecx-next{right:2.4%}
 
-    /* ドット: 8px & gap 8px */
     .ecx-dots{
       position:absolute;left:50%;bottom:0;transform:translateX(-50%);
       display:flex;gap:8px;align-items:center;justify-content:center;
@@ -171,20 +190,21 @@
       .sd-scale label{min-width:28px;padding:2px 0;font-size:10px}
       .sd-scale input[type="radio"]{width:20px;height:20px}
 
-      /* 指示どおり82% + 1.2%余白 */
-      .ecx-carousel {position: relative;width: 100%;overflow: hidden;}
-      .ecx-viewport {width: 100%;overflow: hidden;}
-      .ecx-track { display: flex;align-items: center; transition: transform 0.5s ease;will-change: transform;}
-      .ecx-slide{flex:0 0 82%; margin:0 1.2%;box-sizing:border-box;}
-      .ecx-card img{aspect-ratio:16/9;overflow:hidden;border-radius: 20px;}
-      .ecx-arrow{position:absolute;top:50%;transform:translateY(-50%);z-index:10;width:38px;height:38px;border:none; border-radius: 50%;background:white;font-size:24px;cursor:pointer;}}
+      .ecx-slide{flex:0 0 82%; margin:0 1.2%}
+      .ecx-card{aspect-ratio:16/9}
+      .ecx-arrow{width:38px;height:38px;font-size:24px}
       .ecx-arrow.ecx-prev{left:1%}
       .ecx-arrow.ecx-next{right:1%}
-      .ecx-dots {display: flex;justify-content: center;align-items: center;gap: 8px;margin-top: 14px;}
-      .ecx-dots button {appearance: none;-webkit-appearance: none; width: 8px !important;height: 8px !important;min-width: 8px !important;
-        min-height: 8px !important;padding: 0 !important;margin: 0 !important;border: none !important; 
-        border-radius: 50% !important;background: #c8c8c8;box-shadow: none;cursor: pointer;}
-      .ecx-dots button.active { width: 8px !important; height: 8px !important; background: #222;}
+      .ecx-dot{width:8px;height:8px}
+
+      .start-notice{
+        margin-top:14px;
+        font-size:13px;
+        padding:10px 12px;
+      }
+      .start-notice-title{
+        font-size:16px; /* スタート(20px)より小さい */
+      }
     }
   </style>
 </head>
@@ -193,8 +213,7 @@
 
   <div class="wrap" id="app">
     <header>
-      <h1>架空EC実験</h1>
-      <div class="muted">実験ページ</div>
+      <h1>Facsan online</h1>
     </header>
 
     <main>
@@ -204,7 +223,6 @@
             <button class="ecx-arrow ecx-prev" id="ecx-prev" aria-label="前へ">‹</button>
             <div class="ecx-viewport" id="ecx-viewport">
               <div class="ecx-track" id="ecx-track">
-
                 <div class="ecx-slide"><div class="ecx-card"><img src="images/gazou1.jpg" alt="カルーセル画像1"></div></div>
                 <div class="ecx-slide"><div class="ecx-card"><img src="images/gazou2.jpg" alt="カルーセル画像2"></div></div>
                 <div class="ecx-slide"><div class="ecx-card"><img src="images/gazou3.jpg" alt="カルーセル画像3"></div></div>
@@ -213,7 +231,19 @@
             <button class="ecx-arrow ecx-next" id="ecx-next" aria-label="次へ">›</button>
             <div class="ecx-dots" id="ecx-dots"></div>
           </div>
+
           <button id="start-btn" type="button">スタート</button>
+
+          <!-- 追加: 注意事項 -->
+          <div class="start-notice" aria-label="注意事項">
+            <p class="start-notice-title">♦注意事項♦</p>
+            <ul>
+              <li>このサイト上で買い物をしてください。</li>
+              <li>スタートボタンを押すとこのサイト上でのみ使えるポイントを付与します。</li>
+              <li>このサイトは架空のショッピングサイトであり、商品を購入しても発送はされず、金銭も要求されません。</li>
+              <li>付与されたポイント内で買い物をしてください。商品はいくつ選択しても構いません。</li>
+            </ul>
+          </div>
         </div>
       </section>
 
@@ -269,7 +299,7 @@
         <h2>購入後アンケート</h2>
 
         <div class="sd-block">
-          <div class="sd-title">Q1：現在の温度、湿度の環境はどれくらい不快ですか？（不快環境：蒸し暑いなど）</div>
+          <div class="sd-title">Q1：現在あなたがいる環境は気温・湿度面でどれくらい不快ですか？（不快環境：蒸し暑いなど）</div>
           <div class="sd-scale-wrap" data-mobile-lr="非常に快適 ←→ 非常に不快">
             <div class="sd-left">非常に快適</div>
             <div class="sd-scale" id="q1-scale"></div>
@@ -301,7 +331,6 @@
 
       <div class="final-msg" id="final-msg">回答を送信しました。ご協力ありがとうございました。</div>
     </main>
-
   </div>
 
   <div class="points-panel" id="points-panel">
@@ -522,7 +551,6 @@
       });
     }
 
-    /* ===== カルーセルJS（順番と幅計算を修正） ===== */
     function initCarousel(){
       const carousel = document.getElementById('ecx-carousel');
       const viewport = document.getElementById('ecx-viewport');
@@ -535,14 +563,13 @@
       const originalCount = originals.length;
       if (originalCount < 2) return;
 
-      // clone (last + originals + first)
       const firstClone = originals[0].cloneNode(true);
       const lastClone  = originals[originalCount - 1].cloneNode(true);
       track.insertBefore(lastClone, originals[0]);
       track.appendChild(firstClone);
 
       const slides = Array.from(track.children);
-      let current = 1; // first real slide
+      let current = 1;
       let timer = null;
       let isAnimating = false;
 
@@ -552,15 +579,12 @@
         const style = getComputedStyle(el);
         const ml = parseFloat(style.marginLeft) || 0;
         const mr = parseFloat(style.marginRight) || 0;
-        return { w: rect.width, outer: rect.width + ml + mr };
+        return { outer: rect.width + ml + mr };
       }
 
       function getTranslateFor(index){
-        // 実幅(82% + 左右余白)に一致するよう「累積 outer」で計算
         let leftSum = 0;
-        for(let i=0;i<index;i++){
-          leftSum += slideMetrics(i).outer;
-        }
+        for(let i=0;i<index;i++) leftSum += slideMetrics(i).outer;
         const m = slideMetrics(index);
         const slideCenterX = leftSum + (m.outer / 2);
         const viewportCenterX = viewport.clientWidth / 2;
@@ -612,14 +636,8 @@
       function prev(manual=false){ moveTo(current - 1, manual); }
 
       track.addEventListener('transitionend', ()=>{
-        // ② 順番保証: 1→2→3→1→2→3...
-        if(current === slides.length - 1){
-          current = 1;
-          centerCurrent(false);
-        }else if(current === 0){
-          current = originalCount;
-          centerCurrent(false);
-        }
+        if(current === slides.length - 1){ current = 1; centerCurrent(false); }
+        else if(current === 0){ current = originalCount; centerCurrent(false); }
         isAnimating = false;
       });
 
@@ -649,18 +667,18 @@
       make7Scale('q1-scale','q1');
       make7Scale('q4-scale','q4');
       makeMultiScale('q2-group',[
-        {title:'いろいろ考えて決めた',left:'いろいろ考えて決めた',right:'なんとなく決めた'},
-        {title:'「これがよさそう」と思って決めた',left:'「これがよさそう」と思って決めた',right:'「これが欲しい」と思って決めた'},
-        {title:'慎重に決めた',left:'慎重に決めた',right:'直感的に決めた'},
-        {title:'理由を考えて決めた',left:'理由を考えて決めた',right:'気分で決めた'},
-        {title:'頭で考えて決めた',left:'頭で考えて決めた',right:'気持ちで決めた'}
+        {title:'Select',left:'いろいろ考えて決めた',right:'なんとなく決めた'},
+        {title:'Select',left:'「これがよさそう」と思って決めた',right:'「これが欲しい」と思って決めた'},
+        {title:'Select',left:'慎重に決めた',right:'直感的に決めた'},
+        {title:'Select',left:'理由を考えて決めた',right:'気分で決めた'},
+        {title:'Select',left:'頭で考えて決めた',right:'気持ちで決めた'}
       ],'Q2');
       makeMultiScale('q3-group',[
-        {title:'いろいろ考えて決める',left:'いろいろ考えて決める',right:'なんとなく決める'},
-        {title:'「これがよさそう」と思って決める',left:'「これがよさそう」と思って決める',right:'「これが欲しい」と思って決める'},
-        {title:'慎重に決める',left:'慎重に決める',right:'直感的に決める'},
-        {title:'理由を考えて決める',left:'理由を考えて決める',right:'気分で決める'},
-        {title:'頭で考えて決める',left:'頭で考えて決める',right:'気持ちで決める'}
+        {title:'Select',left:'いろいろ考えて決める',right:'なんとなく決める'},
+        {title:'Select',left:'「これがよさそう」と思って決める',right:'「これが欲しい」と思って決める'},
+        {title:'Select',left:'慎重に決める',right:'直感的に決める'},
+        {title:'Select',left:'理由を考えて決める',right:'気分で決める'},
+        {title:'Select',left:'頭で考えて決める',right:'気持ちで決める'}
       ],'Q3');
       showView('start');
       initCarousel();
