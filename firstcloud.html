@@ -34,6 +34,8 @@
     .start-area{text-align:center;padding:8px 0 16px;border-radius:var(--radius)}
     .start-area button{font-size:20px;padding:14px 26px;margin-top:14px}
 
+    
+    /* 注意事項 */
     .start-notice{
       margin:18px auto 0;
       max-width:720px;
@@ -46,7 +48,7 @@
       font-size:14px;
     }
     .start-notice-title{
-      font-size:18px;
+      font-size:18px; /* スタート(20px)より小さく */
       font-weight:700;
       margin:0 0 6px 0;
       text-align:center;
@@ -54,6 +56,7 @@
     .start-notice ul{margin:0;padding-left:1.2em}
     .start-notice li{margin:2px 0}
 
+    /* ===== 専用カルーセル ===== */
     .ecx-carousel{
       width:100%;
       margin:0 auto 10px;
@@ -68,6 +71,7 @@
       will-change:transform;transition:transform .55s ease;
     }
 
+    /* PC基準 */
     .ecx-slide{
       flex:0 0 76%;
       margin:0 1.5%;
@@ -97,42 +101,14 @@
     .ecx-arrow.ecx-prev{left:2.4%}
     .ecx-arrow.ecx-next{right:2.4%}
 
+    /* ドット: 8px & gap 8px */
     .ecx-dots{
       position:absolute;left:50%;bottom:0;transform:translateX(-50%);
-      display:flex;
-      justify-content:center;
-      align-items:center;
-      gap:0 !important;
-      padding:0 !important;
-      margin:0 !important;
-      line-height:0;
-      font-size:0;
+      display:flex;gap:8px;align-items:center;justify-content:center;
     }
     .ecx-dot{
-      width: 6px !important;
-      height: 6px !important;
-      min-width: 6px !important;
-      min-height: 6px !important;
-      padding: 0 !important;
-      margin: 0 3px !important;
-      border-radius: 50% !important;
-      border:none !important;
-      background:#c7c7c7;
-      box-shadow:none !important;
-      appearance:none !important;
-      -webkit-appearance:none !important;
-      display:inline-block !important;
-      flex:0 0 auto !important;
-      cursor:pointer;
-    }
-    .ecx-dots .ecx-dot{
-      width: 6px !important;
-      height: 6px !important;
-      min-width: 6px !important;
-      min-height: 6px !important;
-      padding: 0 !important;
-      margin: 0 3px !important;
-      border-radius: 50% !important;
+      width:8px;height:8px;border-radius:50%;
+      border:none;background:#c7c7c7;cursor:pointer;padding:0;
     }
     .ecx-dot.ecx-active{background:#1f1f1f}
 
@@ -153,24 +129,6 @@
     .cat-products{margin-top:10px;display:none;padding:8px;background:#fff;border-radius:6px;border:1px solid #111}
     .product-item{padding:6px 8px;border-bottom:1px dashed rgba(0,0,0,.08);display:flex;justify-content:space-between;align-items:center}
     .product-item:last-child{border-bottom:none}
-
-    .subcat-title{font-weight:700;margin:8px 0 10px}
-    .product-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-bottom:8px}
-    .product-card{
-      border:1px solid #111;border-radius:8px;padding:8px;background:#fff;
-      display:flex;flex-direction:column;align-items:stretch;gap:6px;
-    }
-    .product-thumb{
-      width:100%;aspect-ratio:1/1;border-radius:6px;background:#ddd;background-size:cover;background-position:center;
-    }
-    .product-name{font-size:14px;font-weight:700;line-height:1.4}
-    .product-price{font-size:13px}
-    .btn-detail-inline{
-      background:#fff;color:#111;border:1px solid #111;border-radius:6px;padding:8px 10px;font-weight:700;
-    }
-    .btn-add-inline{
-      background:#111;color:#fff;border:1px solid #111;border-radius:6px;padding:8px 10px;font-weight:700;
-    }
 
     .modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.45);display:none;align-items:center;justify-content:center;z-index:600}
     .modal{background:#fff;padding:16px;border-radius:8px;width:380px;max-width:90%;border:2px solid #111}
@@ -224,7 +182,6 @@
 
     @media (max-width:720px){
       .categories{grid-template-columns:1fr}
-      .product-grid{grid-template-columns:1fr}
       .sd-scale-wrap{grid-template-columns:1fr;gap:4px}
       .sd-scale-wrap .sd-left,.sd-scale-wrap .sd-right{display:none}
       .sd-scale-wrap::before{
@@ -236,16 +193,31 @@
       .sd-scale label{min-width:28px;padding:2px 0;font-size:10px}
       .sd-scale input[type="radio"]{width:20px;height:20px}
 
-      .ecx-slide{flex:0 0 82%; margin:0 1.2%}
-      .ecx-card{aspect-ratio:16/9}
-      .ecx-arrow{width:38px;height:38px;font-size:24px}
+      /* 指示どおり82% + 1.2%余白 */
+      .ecx-carousel {position: relative;width: 100%;overflow: hidden;}
+      .ecx-viewport {width: 100%;overflow: hidden;}
+      .ecx-track { display: flex;align-items: center; transition: transform 0.5s ease;will-change: transform;}
+      .ecx-slide{flex:0 0 82%; margin:0 1.2%;box-sizing:border-box;}
+      .ecx-card img{aspect-ratio:16/9;overflow:hidden;border-radius: 20px;}
+      .ecx-arrow{position:absolute;top:50%;transform:translateY(-50%);z-index:10;width:38px;height:38px;border:none; border-radius: 50%;background:white;font-size:24px;cursor:pointer;}}
       .ecx-arrow.ecx-prev{left:1%}
       .ecx-arrow.ecx-next{right:1%}
-      .ecx-dot{width:6px !important;height:6px !important;min-width:6px !important;min-height:6px !important;margin:0 3px !important}
+      .ecx-dots {display: flex;justify-content: center;align-items: center;gap: 8px;margin-top: 14px;}
+      .ecx-dots button {appearance: none;-webkit-appearance: none; width: 8px !important;height: 8px !important;min-width: 8px !important;
+        min-height: 8px !important;padding: 0 !important;margin: 0 !important;border: none !important; 
+        border-radius: 50% !important;background: #c8c8c8;box-shadow: none;cursor: pointer;}
+      .ecx-dots button.active { width: 8px !important; height: 8px !important; background: #222;}
 
-      .start-notice{margin-top:14px;font-size:13px;padding:10px 12px}
-      .start-notice-title{font-size:16px}
+       .start-notice{
+        margin-top:14px;
+        font-size:13px;
+        padding:10px 12px;
+      }
+      .start-notice-title{
+        font-size:16px; /* スタート(20px)より小さい */
+      }
       .crowdworks-notice {margin-top: 3em;}
+
       .answer-code {margin-top: 1em;font-weight: bold;}
     }
   </style>
@@ -265,6 +237,7 @@
             <button class="ecx-arrow ecx-prev" id="ecx-prev" aria-label="前へ">‹</button>
             <div class="ecx-viewport" id="ecx-viewport">
               <div class="ecx-track" id="ecx-track">
+
                 <div class="ecx-slide"><div class="ecx-card"><img src="images/gazou1.jpg" alt="カルーセル画像1"></div></div>
                 <div class="ecx-slide"><div class="ecx-card"><img src="images/gazou2.jpg" alt="カルーセル画像2"></div></div>
                 <div class="ecx-slide"><div class="ecx-card"><img src="images/gazou3.jpg" alt="カルーセル画像3"></div></div>
@@ -274,6 +247,7 @@
             <div class="ecx-dots" id="ecx-dots"></div>
           </div>
           <button id="start-btn" type="button">スタート</button>
+            <!-- 追加: 注意事項 -->
           <div class="start-notice" aria-label="注意事項">
             <p class="start-notice-title">♦注意事項♦</p>
             <ul>
@@ -287,7 +261,7 @@
       </section>
 
       <section id="view-shop" class="view">
-        <h2>ジャンル</h2>
+        <h2>カテゴリ</h2>
         <div class="categories" id="categories"></div>
         <div style="height:280px"></div>
 
@@ -365,35 +339,26 @@
           </div>
         </div>
 
-        <div class="sd-block">
-          <div class="sd-title">Q5：あなたにとって本は以下のどれに当てはまりますか</div>
-          <div id="q5-group"></div>
-        </div>
-
-        <div class="sd-block">
-          <div class="sd-title">Q6：あなたは普段どのように本を選びますか</div>
-          <div class="sd-scale-wrap" data-mobile-lr="表紙のデザインで決める ←→ あらすじで決める">
-            <div class="sd-left">表紙のデザインで決める</div>
-            <div class="sd-scale" id="q6-scale"></div>
-            <div class="sd-right">あらすじで決める</div>
-          </div>
-        </div>
-
         <button id="submit-survey" type="button">回答を送信</button>
+        
       </section>
 
       <div class="final-msg" id="final-msg">回答を送信しました。ご協力ありがとうございました。
          <div class="crowdworks-notice">
           <p class="start-notice-title">♦クラウドワークスから回答の方♦</p>
+
           <p>クラウドワークスの入力画面に以下の英数字を入力してください。</p>
+
           <p class="answer-code">E27fiDh7</p>
          </div>
       </div>
+       
     </main>
+
   </div>
 
   <div class="points-panel" id="points-panel">
-    <div>獲得ポイント <strong id="points-amount">2000</strong> pt
+    <div>獲得ポイント <strong id="points-amount">1500</strong> pt
       <button class="close" id="close-points" aria-label="閉じる">✕</button>
     </div>
   </div>
@@ -422,111 +387,122 @@
 
   <script>
     const CATEGORIES = [
-      { id:'literature', name:'文学', imageUrl:'kitchen.jpg', subcategories:[
-        { name:'文学', imageUrl:'sarap.jpg', products:[
-          { name:'『午後四時の窓辺』', price:850, imageUrl:'sara.jpg' },
-          { name:'『名前のない季節』', price:850, imageUrl:'prate.jpg' },
-          { name:'『雨音を数える』', price:850, imageUrl:'kidsp.jpg' },
-          { name:'『遠い灯りの向こう側』', price:850, imageUrl:'magw.jpg' },
-          { name:'『静かな人たち』', price:850, imageUrl:'magb.jpg' }
+      { id:'kitchen', name:'キッチン用品', imageUrl:'kitchen.jpg', subcategories:[
+        { name:'皿・プレート', imageUrl:'sarap.jpg', products:[
+          { name:'皿', price:330, imageUrl:'sara.jpg' },
+          { name:'プレート', price:550, imageUrl:'prate.jpg' },
+          { name:'お子様プレート', price:550, imageUrl:'kidsp.jpg' }
+        ]},
+        { name:'グラス・カップ', imageUrl:'glass.jpg', products:[
+          { name:'マグカップ（ホワイト）', price:330, imageUrl:'magw.jpg' },
+          { name:'マグカップ（ブラック）', price:330, imageUrl:'magb.jpg' },
+          { name:'透明グラス', price:330, imageUrl:'glass.jpg' },
+          { name:'ワイングラス', price:660, imageUrl:'wine.jpg' }
+        ]},
+        { name:'箸・カトラリー', imageUrl:'chopcat.jpg', products:[
+          { name:'箸（4膳）', price:330, imageUrl:'chop.jpg' },
+          { name:'箸（2膳）', price:160, imageUrl:'chop.jpg' },
+          { name:'カトラリーセット1人分', price:330, imageUrl:'cat.jpg' }
+        ]},
+        { name:'ランチボックス', imageUrl:'lunch.jpg', products:[
+          { name:'ランチボックス', price:550, imageUrl:'lunchb.jpg' },
+          { name:'2段ランチボックス', price:770, imageUrl:'lunch2.jpg' },
+          { name:'わっぱ風ランチボックス', price:770, imageUrl:'wappa.jpg' }
+        ]},
+        { name:'水筒・タンブラー', imageUrl:'water.jpg', products:[
+          { name:'水筒（ホワイト）', price:880, imageUrl:'suitow.jpg' },
+          { name:'水筒（ブラック）', price:880, imageUrl:'suitob.jpg' },
+          { name:'タンブラー（ホワイト）', price:660, imageUrl:'tamw.jpg' },
+          { name:'タンブラー（ブラック）', price:660, imageUrl:'tamb.jpg' }
+        ]},
+        { name:'容器・ボウル', imageUrl:'bowl.jpg', products:[
+          { name:'保存容器', price:660, imageUrl:'hyouki.jpg' },
+          { name:'ボウル', price:330, imageUrl:'bowl.jpg' },
+          { name:'ざる', price:330, imageUrl:'zaru.jpg' }
+        ]},
+        { name:'コースター・ランチョンマット', imageUrl:'coasterlunch.jpg', products:[
+          { name:'カップコースター', price:330, imageUrl:'coster.jpg' },
+          { name:'ランチョンマット', price:330, imageUrl:'lunchm.jpg' }
         ]}
       ]},
-      { id:'mystery', name:'ミステリ', imageUrl:'shuno.jpg', subcategories:[
-        { name:'ミステリ', imageUrl:'tool.jpg', products:[
-          { name:'『七番目の空室』', price:850, imageUrl:'box.jpg' },
-          { name:'『消えた午後三時』', price:850, imageUrl:'busket.jpg' },
-          { name:'『逆さまの手紙』', price:850, imageUrl:'kago.jpg' },
-          { name:'『最後に傘を閉じた人』', price:850, imageUrl:'luckw.jpg' },
-          { name:'『誰も読まなかった議事録』', price:850, imageUrl:'luckb.jpg' }
+      { id:'shuno', name:'収納', imageUrl:'shuno.jpg', subcategories:[
+        { name:'収納ボックス', imageUrl:'tool.jpg', products:[
+          { name:'S', price:550, imageUrl:'box.jpg' },
+          { name:'M', price:880, imageUrl:'box.jpg' },
+          { name:'L', price:1320, imageUrl:'box.jpg' }
+        ]},
+        { name:'バスケット・カゴ', imageUrl:'tool.jpg', products:[
+          { name:'バスケット', price:1320, imageUrl:'busket.jpg' },
+          { name:'カゴ', price:1100, imageUrl:'kago.jpg' }
+        ]},
+        { name:'ラック', imageUrl:'tool.jpg', products:[
+          { name:'ラック（ホワイト）', price:330, imageUrl:'luckw.jpg' },
+          { name:'ラック（ブラック）', price:330, imageUrl:'luckb.jpg' }
+        ]},
+        { name:'ハンガー', imageUrl:'tool.jpg', products:[
+          { name:'ハンガー（4本）', price:550, imageUrl:'hung4.jpg' },
+          { name:'ハンガー（6本）', price:660, imageUrl:'hung6.jpg' },
+          { name:'ピンチハンガー（ピンチ6つ）', price:700, imageUrl:'phung.jpg' },
+          { name:'ピンチハンガー（ピンチ8つ）', price:800, imageUrl:'phung.jpg' }
+        ]},
+        { name:'アクセサリートレー', imageUrl:'tool.jpg', products:[
+          { name:'アクササリートレー（ホワイト）', price:330, imageUrl:'torew.jpg' },
+          { name:'アクセサリートレー（ウッド）', price:330, imageUrl:'torewo.jpg' }
         ]}
       ]},
-      { id:'romance', name:'恋愛', imageUrl:'interia.jpg', subcategories:[
-        { name:'恋愛', imageUrl:'tool.jpg', products:[
-          { name:'『君と違う駅で降りる』', price:850, imageUrl:'katenw.jpg' },
-          { name:'『返信のない午後』', price:850, imageUrl:'kateng.jpg' },
-          { name:'『春になるまで待って』', price:850, imageUrl:'tokeiw.jpg' },
-          { name:'『好きになる前の話』', price:850, imageUrl:'tokeib.jpg' },
-          { name:'『午前0時の待ち合わせ』', price:850, imageUrl:'belt.jpg' }
+      { id:'interia', name:'インテリア', imageUrl:'interia.jpg', subcategories:[
+        { name:'カーテン', imageUrl:'tool.jpg', products:[
+          { name:'ミニカーテン（ホワイト）', price:550, imageUrl:'katenw.jpg' },
+          { name:'ミニカーテン（グレー）', price:550, imageUrl:'kateng.jpg' }
+        ]},
+        { name:'時計', imageUrl:'tool.jpg', products:[
+          { name:'時計（ホワイト）', price:770, imageUrl:'tokeiw.jpg' },
+          { name:'時計（ブラック）', price:770, imageUrl:'tokeib.jpg' }
         ]}
       ]},
-      { id:'horror', name:'ホラー', imageUrl:'fashion.jpg', subcategories:[
-        { name:'ホラー', imageUrl:'tool.jpg', products:[
-          { name:'『三階には誰も住んでいない』', price:850, imageUrl:'sunglass.jpg' },
-          { name:'『母から届いた留守番電話』', price:850, imageUrl:'megane.jpg' },
-          { name:'『写真の中だけ雨が降る』', price:850, imageUrl:'cap.jpg' },
-          { name:'『午前二時のエレベーター』', price:850, imageUrl:'mask.jpg' },
-          { name:'『隣の部屋の拍手』', price:850, imageUrl:'kasa.jpg' }
+      { id:'fashion', name:'ファッション雑貨・小物', imageUrl:'fashion.jpg', subcategories:[
+        { name:'ファッション雑貨', imageUrl:'tool.jpg', products:[
+          { name:'ベルト', price:330, imageUrl:'belt.jpg' },
+          { name:'サングラス', price:1100, imageUrl:'sunglass.jpg' },
+          { name:'めがね', price:550, imageUrl:'megane.jpg' },
+          { name:'帽子', price:1320, imageUrl:'cap.jpg' },
+          { name:'マスク', price:330, imageUrl:'mask.jpg' }
+        ]},
+        { name:'傘', imageUrl:'tool.jpg', products:[
+          { name:'傘', price:2420, imageUrl:'kasa.jpg' },
+          { name:'財布', price:330, imageUrl:'saihu.jpg' },
+          { name:'コインケース', price:330, imageUrl:'coin.jpg' },
+          { name:'ハンカチ', price:330, imageUrl:'hankachi.jpg' },
+          { name:'ポーチ', price:660, imageUrl:'pouch.jpg' },
+          { name:'パスケース', price:330, imageUrl:'passcase.jpg' }
         ]}
       ]},
-      { id:'fantasy', name:'ファンタジー', imageUrl:'device.jpg', subcategories:[
-        { name:'ファンタジー', imageUrl:'tool.jpg', products:[
-          { name:'『星をしまう郵便局』', price:850, imageUrl:'tan3.jpg' },
-          { name:'『月曜日だけ魔法が使える町』', price:850, imageUrl:'botan.jpg' },
-          { name:'『記憶を育てる庭』', price:850, imageUrl:'lightw.jpg' },
-          { name:'『雲の下の王国』', price:850, imageUrl:'lightb.jpg' },
-          { name:'『魔法使いの忘れもの』', price:850, imageUrl:'lampshade.jpg' }
-        ]}
-      ]},
-      { id:'nonfiction', name:'ノンフィクション', imageUrl:'kitchen.jpg', subcategories:[
-        { name:'ノンフィクション', imageUrl:'tool.jpg', products:[
-          { name:'『知らない街で暮らす』', price:850, imageUrl:'yusenw.jpg' },
-          { name:'『一日一人に話を聞く』', price:850, imageUrl:'bluetoothw.jpg' },
-          { name:'『小さな工場の大きな挑戦』', price:850, imageUrl:'headphonew.jpg' },
-          { name:'『数字のない一週間』', price:850, imageUrl:'coin.jpg' },
-          { name:'『最後の一席を守る人』', price:850, imageUrl:'pouch.jpg' }
+      { id:'device', name:'家電・デバイス', imageUrl:'device.jpg', subcategories:[
+        { name:'電池', imageUrl:'tool.jpg', products:[
+          { name:'単3', price:140, imageUrl:'tan3.jpg' },
+          { name:'単４', price:140, imageUrl:'tan3.jpg' },
+          { name:'ボタン電池', price:130, imageUrl:'botan.jpg' }
+        ]},
+        { name:'照明', imageUrl:'tool.jpg', products:[
+          { name:'ライト（ホワイト）', price:330, imageUrl:'lightw.jpg' },
+          { name:'ライト（ブラック）', price:330, imageUrl:'lightb.jpg' },
+          { name:'ランプシェード', price:880, imageUrl:'lampshade.jpg' }
+        ]},
+        { name:'イヤホン', imageUrl:'tool.jpg', products:[
+          { name:'有線イヤホン（ホワイト）', price:550, imageUrl:'yusenw.jpg' },
+          { name:'Bluetoothイヤホン（ホワイト）', price:2200, imageUrl:'bluetoothw.jpg' },
+          { name:'ヘッドフォン（ホワイト）', price:3850, imageUrl:'headphonew.jpg' }
         ]}
       ]}
     ];
 
-    const PRODUCT_DESCRIPTIONS = {
-      '『午後四時の窓辺』':'誰にも言えない過去を抱えた三人が、同じ町で静かに暮らしている。何気ない日常の中に、それぞれの人生の選択と後悔が浮かび上がっていく。',
-      '『名前のない季節』':'故郷を離れて十年ぶりに戻ってきた女性が、かつての友人たちと再会する。変わってしまった町と変わらない記憶の間で、自分の人生を見つめ直す物語。',
-      '『雨音を数える』':'眠れない夜に雨音を数えることを習慣にしている青年。ある出来事をきっかけに、忘れたと思っていた家族との記憶が少しずつ蘇っていく。',
-      '『遠い灯りの向こう側』':'海辺の小さな町で暮らす少女と、町を出ることを決めた父親。離れていく二人の視点から、「帰る場所」とは何かを描く。',
-      '『静かな人たち』':'同じアパートに暮らす、互いに名前も知らない住人たち。それぞれの小さな人生が、ある一つの出来事をきっかけに交差していく。',
+    const PRODUCT_DESCRIPTIONS = { '皿':'毎日の食卓をやさしく彩る、シンプルで使いやすいプレート。','プレート':'料理をきれいに引き立てる、使い勝手のよい上品なプレート。','お子様プレート':'かわいらしいデザインで、毎日の食事が楽しくなるお子様向けプレート。','マグカップ（ホワイト）':'やわらかなホワイトカラーが暮らしになじむ、シンプルなマグカップ。','マグカップ（ブラック）':'落ち着いたブラックカラーが大人っぽい、洗練されたマグカップ。','透明グラス':'飲み物の色まで楽しめる、すっきりとした透明感のあるグラス。','ワイングラス':'いつもの時間をちょっと特別にしてくれる、上品なワイングラス。','箸（4膳）':'食卓に取り入れやすい、色違いで楽しめるシンプルな4膳セット。','箸（2膳）':'毎日の食卓にちょうどいい、使いやすい2膳セット。','カトラリーセット1人分':'スプーン・フォークなどをまとめた、毎日の食事に便利なセット。','ランチボックス':'コンパクトで持ち運びやすい、毎日のランチにぴったりのお弁当箱。','2段ランチボックス':'たっぷり入って使い分けもできる、便利な2段タイプのお弁当箱。','わっぱ風ランチボックス':'木のぬくもりを感じるデザインで、ランチタイムをおしゃれに演出。','水筒（ホワイト）':'すっきりとしたホワイトカラーで、毎日の持ち歩きにおすすめの水筒。','水筒（ブラック）':'シックなブラックカラーが魅力の、スタイリッシュなマイボトル。','タンブラー（ホワイト）':'どんなシーンにも合わせやすい、清潔感のあるホワイトタンブラー。','タンブラー（ブラック）':'大人っぽいブラックカラーで、持つだけで気分が引き締まるタンブラー。','保存容器':'食材の保存や作り置きに便利な、すっきり収納できる保存容器。','ボウル':'サラダや料理の盛り付けに使いやすく、毎日の食卓に便利なボウル。','ざる':'野菜や麺類の水切りに活躍する、使いやすく扱いやすいキッチンアイテム。','カップコースター':'グラスやカップの下に敷くだけで、テーブルをかわいく演出するコースター。','ランチョンマット':'食卓に置くだけで、いつもの食事をおしゃれに見せてくれるランチョンマット。','S':'小物の整理にちょうどいい、コンパクトで使いやすい収納ボックス。','M':'衣類や雑貨などをすっきりまとめられる、使い勝手のよい収納ボックス。','L':'かさばるアイテムもしっかり収納できる、頼れる大容量ボックス。','バスケット':'見せる収納にもぴったりな、暮らしに自然になじむバスケット。','カゴ':'小物やタオルなどをまとめて、すっきり収納できるナチュラルなカゴ。','ラック（ホワイト）':'明るいホワイトカラーで、お部屋をすっきり見せてくれる収納ラック。','ラック（ブラック）':'シックなブラックカラーが空間を引き締める、スタイリッシュなラック。','ハンガー（4本）':'クローゼットをすっきり整える、使いやすいハンガー4本セット。','ハンガー（6本）':'衣類をまとめて整理できる、毎日の収納に便利なハンガー6本セット。','ピンチハンガー（ピンチ6つ）':'靴下やハンカチなどの小物干しに便利な、コンパクトなピンチハンガー。','ピンチハンガー（ピンチ8つ）':'小物をまとめて干せる、毎日の洗濯に便利なピンチハンガー。','アクササリートレー（ホワイト）':'アクセサリーをかわいく見せながら整理できる、上品なホワイトトレー。','アクセサリートレー（ウッド）':'木のぬくもりを感じるデザインで、大切なアクセサリーをおしゃれに収納。','ミニカーテン（ホワイト）':'やわらかなホワイトカラーで、お部屋を明るく整えるミニカーテン。','ミニカーテン（グレー）':'やわらかなグレーカラーで、お部屋をシックに整えるミニカーテン。','時計（ホワイト）':'すっきりとしたデザインで、どんなお部屋にも合わせやすい壁掛け時計。','時計（ブラック）':'シンプルなブラックカラーが空間のアクセントになるスタイリッシュな時計。','ベルト':'コーディネートのアクセントにも使える、シンプルで合わせやすいベルト。','サングラス':'いつものコーディネートに取り入れやすい、洗練されたデザインのサングラス。','めがね':'デイリーに使いやすく、顔まわりをすっきり見せてくれるシンプルなめがね。','帽子':'いつものスタイルにプラスするだけで、おしゃれに決まるデイリーハット。','マスク':'毎日使いやすく、顔まわりをすっきり見せてくれるシンプルなマスク。','傘':'雨の日も気分を上げてくれる、毎日持ち歩きたくなるおしゃれな傘。','財布':'コンパクトながら使いやすく、毎日のお出かけに寄り添うシンプルな財布。','コインケース':'小銭をすっきり収納できる、バッグに入れて持ち歩きやすいコインケース。','ハンカチ':'バッグに一枚入れておきたい、毎日使える上品なハンカチ。','ポーチ':'コスメや小物をまとめて収納できる、バッグの中を整える便利なポーチ。','パスケース':'毎日の通勤・通学に使いやすい、すっきりとしたデザインのパスケース。','単3':'リモコンやおもちゃなど、毎日の暮らしに欠かせない定番の単3電池。','単４':'小型のリモコンやデバイスにも使いやすい、便利な単4電池。','ボタン電池':'時計や小型機器などに使える、ストックしておくと便利なボタン電池。','ライト（ホワイト）':'やわらかなホワイトカラーで、お部屋を明るく彩るコンパクトライト。','ライト（ブラック）':'シックなブラックカラーがインテリアのアクセントになるミニライト。','ランプシェード':'いつものお部屋にやさしい雰囲気をプラスする、インテリア性の高いランプシェード。','有線イヤホン（ホワイト）':'シンプルなホワイトカラーで、日常使いしやすいベーシックな有線イヤホン。','Bluetoothイヤホン（ホワイト）':'ワイヤレスで身軽に楽しめる、毎日の音楽時間にぴったりのイヤホン。','ヘッドフォン（ホワイト）':'存在感のあるデザインで、音楽時間をおしゃれに楽しめるヘッドフォン。' };
 
-      '『七番目の空室』':'十二室あるホテルで、なぜか「七号室」だけが存在しない。ホテルを訪れた探偵は、過去の宿泊記録に残された奇妙な共通点に気づく。',
-      '『消えた午後三時』':'町の時計が一斉に午後三時を示した瞬間、住民の一人が姿を消した。しかし、その人物が消えたことを覚えている者は誰もいなかった。',
-      '『逆さまの手紙』':'亡くなった祖父の遺品から、上下逆さまに書かれた一通の手紙が見つかる。そこに隠された暗号を解くにつれ、家族が長年隠してきた事件が明らかになる。',
-      '『最後に傘を閉じた人』':'雨の日にだけ現れる謎の目撃者が、三つの事件に共通して登場していた。刑事は証言を追ううちに、事件そのものより奇妙な「目撃者の正体」に迫っていく。',
-      '『誰も読まなかった議事録』':'小さな会社で起きた失踪事件を調べるため、過去の社内議事録が集められる。誰にも読まれていなかった一枚の記録が、事件の真相を示していた。',
-
-      '『君と違う駅で降りる』':'同じ電車に乗る二人は、毎朝顔を合わせながら一度も話したことがない。ある朝、偶然の出来事から始まった会話が、二人の日常を少しずつ変えていく。',
-      '『返信のない午後』':'突然連絡を返さなくなった恋人を待ちながら、主人公は過去のメッセージを読み返す。そこに残された言葉から、二人の関係を見つめ直していく。',
-      '『春になるまで待って』':'遠距離恋愛を始めた二人が、「春になったら一緒に暮らす」という約束をする。しかし、時間が経つにつれて、それぞれの未来に別の選択肢が現れる。',
-      '『好きになる前の話』':'幼なじみだった二人が、大学進学をきっかけに初めて互いを異性として意識する。「いつから好きだったのか」を振り返りながら進む青春恋愛小説。',
-      '『午前0時の待ち合わせ』':'毎月一度、誰にも場所を教えず同じ公園で会う二人。秘密を抱えたまま続く関係の中で、二人は本当の気持ちを伝える決心をする。',
-
-      '『三階には誰も住んでいない』':'引っ越したアパートには、住人が一人もいないはずの三階があった。しかし毎晩決まった時間になると、上から誰かが歩く音が聞こえてくる。',
-      '『母から届いた留守番電話』':'数年前に亡くなった母親から、突然スマートフォンに留守番電話が届く。再生するたびに、録音された声が少しずつ現在の出来事を語り始める。',
-      '『写真の中だけ雨が降る』':'古いアルバムにある写真では、どの場所にも雨が降っていた。調べていくうちに、写真が撮影された場所では必ず誰かが行方不明になっていることが判明する。',
-      '『午前二時のエレベーター』':'マンションのエレベーターには、午前二時だけ存在しない階へのボタンが現れる。好奇心からその階へ向かった主人公は、自分の部屋とまったく同じ部屋を見つける。',
-      '『隣の部屋の拍手』':'深夜になると、壁の向こうから一定の間隔で拍手が聞こえてくる。隣室は何年も空室のはずだったが、ある夜、拍手に合わせて自分の部屋の照明が点滅し始める。',
-
-      '『星をしまう郵便局』':'眠っている間に見た星を、瓶に詰めて保管する不思議な郵便局。新人局員の少女は、誰かの夢から届いた「存在しない星」を巡る事件に巻き込まれる。',
-      '『月曜日だけ魔法が使える町』':'この町では、なぜか月曜日にしか魔法を使うことができない。一週間に一度の魔法を使いながら、人々は限られた時間の中で願いを叶えようとする。',
-      '『記憶を育てる庭』':'古い庭園には、忘れられた記憶から花を咲かせる木が一本だけ存在する。記憶を失った少年は、自分の過去を取り戻すため庭園を訪れる。',
-      '『雲の下の王国』':'空に浮かぶ王国では、地上の人々の「願い」が国を動かす力になっていた。しかし突然、世界中から願いが消え始め、王国そのものが崩れ始める。',
-      '『魔法使いの忘れもの』':'一流の魔法使いが旅の途中で、記憶を失った少女と出会う。少女が持っていた小さな鍵が、世界から消えた魔法を取り戻す唯一の手がかりだった。',
-
-      '『知らない街で暮らす』':'仕事を辞め、縁もゆかりもない地方都市で一年間暮らした著者の記録。地域の人々との交流を通して、「豊かに暮らすこと」の意味を考える。',
-      '『一日一人に話を聞く』':'一年間、毎日一人の知らない人に人生について話を聞いた記録。会社員、学生、職人、経営者など、365人の言葉から現代社会の姿を描く。',
-      '『小さな工場の大きな挑戦』':'地方の町工場が、廃業寸前から独自技術を武器に再生していく過程を追う。経営者と従業員への取材を通して、ものづくりの現場と地域産業の未来を考える。',
-      '『数字のない一週間』':'スマートフォンや時計を使わず、一週間生活してみた著者の実験記。時間を数字で管理しないことで、仕事・食事・睡眠への感覚がどう変化したのかを記録する。',
-      '『最後の一席を守る人』':'長年続いてきた小さな食堂を守る店主と、その店を利用する地域の人々を取材。一つの店が地域社会の中で果たしている、数字では測れない役割を描く。'
-    };
-
-    const INITIAL_POINTS = 2000;
+    const INITIAL_POINTS = 1500;
     const SHEET_ENDPOINT = 'https://script.google.com/macros/s/AKfycbyz9B50dQASG2Zd2-PvGf0D_I4oRQSrYC3l35NUzE3BLxpKzVT5rWC7Or7zFYBVkrK8/exec';
     const ENABLE_SHEET_SYNC = Boolean(SHEET_ENDPOINT && SHEET_ENDPOINT.startsWith('https://'));
 
-    const experimentData = {
-      participant_id:(crypto?.randomUUID ? crypto.randomUUID() : `id-${Date.now()}`),
-      start_time_iso:null, close_points_time_iso:null, pay_time_iso:null, total_time_ms:null,
-      events:[], cart:[], purchases:[], cart_history:[], product_detail_count:0, click_count:0, customer:{}, survey:{},
-      product_view_times_s:{},    // 商品別の累積詳細閲覧秒
-      purchase_order_titles:[]    // 購入順タイトル（1冊目/2冊目抽出用）
-    };
+    const experimentData = { participant_id:(crypto?.randomUUID ? crypto.randomUUID() : `id-${Date.now()}`), start_time_iso:null, close_points_time_iso:null, pay_time_iso:null, total_time_ms:null, events:[], cart:[], purchases:[], cart_history:[], product_detail_count:0, click_count:0, customer:{}, survey:{} };
 
     const views = { start:document.getElementById('view-start'), shop:document.getElementById('view-shop'), checkout:document.getElementById('view-checkout'), survey:document.getElementById('view-survey') };
     const pointsDisplay = document.getElementById('points-display');
@@ -565,7 +541,6 @@
 
     let pointsOwned = 0, hasStarted = false, currentProduct = null, currentProductPrice = 0, currentQty = 1;
     let canShowCartButton = false, cartButtonAlreadyUsed = false;
-    let detailOpenEpochMs = null, detailTimerInterval = null;
 
     function nowISO(){ return new Date().toISOString(); }
     function pushEvent(type, detail={}){ experimentData.events.push({type, ts:nowISO(), detail}); }
@@ -600,6 +575,7 @@
       });
     }
 
+    /* ===== カルーセルJS（順番と幅計算を修正） ===== */
     function initCarousel(){
       const carousel = document.getElementById('ecx-carousel');
       const viewport = document.getElementById('ecx-viewport');
@@ -612,13 +588,14 @@
       const originalCount = originals.length;
       if (originalCount < 2) return;
 
+      // clone (last + originals + first)
       const firstClone = originals[0].cloneNode(true);
       const lastClone  = originals[originalCount - 1].cloneNode(true);
       track.insertBefore(lastClone, originals[0]);
       track.appendChild(firstClone);
 
       const slides = Array.from(track.children);
-      let current = 1;
+      let current = 1; // first real slide
       let timer = null;
       let isAnimating = false;
 
@@ -632,8 +609,11 @@
       }
 
       function getTranslateFor(index){
+        // 実幅(82% + 左右余白)に一致するよう「累積 outer」で計算
         let leftSum = 0;
-        for(let i=0;i<index;i++){ leftSum += slideMetrics(i).outer; }
+        for(let i=0;i<index;i++){
+          leftSum += slideMetrics(i).outer;
+        }
         const m = slideMetrics(index);
         const slideCenterX = leftSum + (m.outer / 2);
         const viewportCenterX = viewport.clientWidth / 2;
@@ -685,8 +665,14 @@
       function prev(manual=false){ moveTo(current - 1, manual); }
 
       track.addEventListener('transitionend', ()=>{
-        if(current === slides.length - 1){ current = 1; centerCurrent(false); }
-        else if(current === 0){ current = originalCount; centerCurrent(false); }
+        // ② 順番保証: 1→2→3→1→2→3...
+        if(current === slides.length - 1){
+          current = 1;
+          centerCurrent(false);
+        }else if(current === 0){
+          current = originalCount;
+          centerCurrent(false);
+        }
         isAnimating = false;
       });
 
@@ -709,26 +695,12 @@
       startAuto();
     }
 
-    function startDetailTimer(){
-      stopDetailTimer();
-      detailOpenEpochMs = Date.now();
-      detailTimerInterval = setInterval(()=>{}, 250); // 表示しないが計測は継続
-    }
-    function stopDetailTimer(){
-      if(detailTimerInterval){
-        clearInterval(detailTimerInterval);
-        detailTimerInterval = null;
-      }
-    }
-
     (function init(){
       pointsNum.textContent = 0;
       cartPointsDisp.textContent = 0;
       pointsAmount.textContent = INITIAL_POINTS;
       make7Scale('q1-scale','q1');
       make7Scale('q4-scale','q4');
-      make7Scale('q6-scale','q6');
-
       makeMultiScale('q2-group',[
         {title:'.',left:'いろいろ考えて決めた',right:'なんとなく決めた'},
         {title:'.',left:'自制心をもって決めた',right:'欲求に従って決めた'},
@@ -736,23 +708,13 @@
         {title:'.',left:'理性的に決めた',right:'感情で決めた'},
         {title:'.',left:'論理的に考えて決めた',right:'気持ちで決めた'}
       ],'Q2');
-
       makeMultiScale('q3-group',[
         {title:'.',left:'いろいろ考えて決める',right:'なんとなく決める'},
         {title:'.',left:'自制心をもって決める',right:'欲求に従って決める'},
-        {title:'.',left:'慎重に決める',right:'直感的に決める'},
-        {title:'.',left:'理由を考えて決める',right:'気分で決める'},
-        {title:'.',left:'論理的に考えて決める',right:'気持ちで決める'}
+        {title:'.',left:'慎重に决める',right:'直感的に决める'},
+        {title:'.',left:'理性的に决める',right:'感情で决める'},
+        {title:'.',left:'論理的に考えて决める',right:'気持ちで决める'}
       ],'Q3');
-
-      makeMultiScale('q5-group',[
-        {title:'.',left:'重要でない',right:'重要である'},
-        {title:'.',left:'関心がない',right:'関心がある'},
-        {title:'.',left:'大きな意味がある',right:'何の意味もない'},
-        {title:'.',left:'どうでもいい',right:'私にとって大切'},
-        {title:'.',left:'ささいなもの',right:'重大である'}
-      ],'Q5');
-
       showView('start');
       initCarousel();
     })();
@@ -780,23 +742,6 @@
       cartFloating.style.display = 'block';
     });
 
-    function addToCartByProduct(p, qty=1){
-      const total = p.price * qty;
-      if(pointsOwned < total){ alert('ポイントが不足しています。'); return false; }
-      pointsOwned -= total;
-      for(let i=0;i<qty;i++){
-        experimentData.cart.push(p.name);
-        experimentData.purchase_order_titles.push(p.name);
-      }
-      experimentData.cart_history.push({action:'add',name:p.name,price:total,remaining_points:pointsOwned,ts:nowISO()});
-      pushEvent('cart_add',{product:p.name,qty,total});
-      pointsNum.textContent = pointsOwned;
-      cartPointsDisp.textContent = pointsOwned;
-      pointsStatus.textContent = `現在のポイント残高: ${pointsOwned}pt`;
-      refreshCartUI();
-      return true;
-    }
-
     function renderCategories(){
       categoriesDiv.innerHTML = '';
       CATEGORIES.forEach(cat=>{
@@ -807,60 +752,23 @@
         if(cat.imageUrl) img.style.backgroundImage = `url('images/${cat.imageUrl}')`;
 
         const prodDiv = card.querySelector('.cat-products');
-
         (cat.subcategories||[]).forEach(sub=>{
-          const subTitle = document.createElement('div');
-          subTitle.className = 'subcat-title';
-          subTitle.textContent = sub.name;
-          prodDiv.appendChild(subTitle);
-
-          const grid = document.createElement('div');
-          grid.className = 'product-grid';
+          const t = document.createElement('div');
+          t.style.fontWeight='700'; t.style.margin='4px 0 6px'; t.textContent = sub.name;
+          prodDiv.appendChild(t);
 
           (sub.products||[]).forEach(p=>{
-            const pCard = document.createElement('div');
-            pCard.className = 'product-card';
-
-            const thumb = document.createElement('div');
-            thumb.className = 'product-thumb';
-            if(p.imageUrl) thumb.style.backgroundImage = `url('images/${p.imageUrl}')`;
-
-            const name = document.createElement('div');
-            name.className = 'product-name';
-            name.textContent = p.name;
-
-            const price = document.createElement('div');
-            price.className = 'product-price';
-            price.textContent = `${p.price}円`;
-
-            const detailBtn = document.createElement('button');
-            detailBtn.type = 'button';
-            detailBtn.className = 'btn-detail-inline';
-            detailBtn.textContent = '詳細';
-            detailBtn.addEventListener('click',(e)=>{
-              e.stopPropagation();
-              openDetail(p);
-            });
-
-            const addBtn = document.createElement('button');
-            addBtn.type = 'button';
-            addBtn.className = 'btn-add-inline';
-            addBtn.textContent = 'カートに追加';
-            addBtn.addEventListener('click',(e)=>{
-              e.stopPropagation();
-              const ok = addToCartByProduct(p, 1);
-              if(ok) alert(`${p.name} をカートに追加しました。\n残りポイント：${pointsOwned}pt`);
-            });
-
-            pCard.appendChild(thumb);
-            pCard.appendChild(name);
-            pCard.appendChild(price);
-            pCard.appendChild(detailBtn);
-            pCard.appendChild(addBtn);
-            grid.appendChild(pCard);
+            const row = document.createElement('div');
+            row.className='product-item';
+            row.innerHTML = `<div>${p.name} (${p.price}円)</div>`;
+            const r = document.createElement('div');
+            const btn = document.createElement('button');
+            btn.type='button'; btn.textContent='詳細';
+            btn.addEventListener('click',(e)=>{ e.stopPropagation(); openDetail(p); });
+            r.appendChild(btn);
+            row.appendChild(r);
+            prodDiv.appendChild(row);
           });
-
-          prodDiv.appendChild(grid);
         });
 
         card.addEventListener('click',()=>{ prodDiv.style.display = (prodDiv.style.display==='block') ? 'none' : 'block'; });
@@ -884,22 +792,8 @@
       pushEvent('product_detail_open',{product:p.name});
       modalBackdrop.style.display='flex';
       detailModal.focus();
-      startDetailTimer();
     }
-
-    function closeDetail(){
-      if(currentProduct){
-        const elapsedMs = detailOpenEpochMs ? (Date.now() - detailOpenEpochMs) : 0;
-        const elapsedSec = Math.floor(elapsedMs / 1000);
-        experimentData.product_view_times_s[currentProduct] =
-          (experimentData.product_view_times_s[currentProduct] || 0) + elapsedSec;
-        pushEvent('product_detail_close',{product:currentProduct,view_time_s:elapsedSec});
-      }
-      stopDetailTimer();
-      detailOpenEpochMs = null;
-      currentProduct = null;
-      modalBackdrop.style.display='none';
-    }
+    function closeDetail(){ if(currentProduct) pushEvent('product_detail_close',{product:currentProduct}); currentProduct = null; modalBackdrop.style.display='none'; }
 
     qtyMinus.addEventListener('click',()=>{
       if(currentQty>1){ currentQty--; qtyDisplay.textContent=currentQty; addToCartBtn.textContent = `カートに追加（${currentProductPrice*currentQty}円）`; }
@@ -910,11 +804,17 @@
 
     addToCartBtn.addEventListener('click',()=>{
       if(!currentProduct) return;
-      const p = { name: currentProduct, price: currentProductPrice, imageUrl:'' };
-      const ok = addToCartByProduct(p, currentQty);
-      if(!ok) return;
+      const total = currentProductPrice*currentQty;
+      if(pointsOwned < total){ alert('ポイントが不足しています。'); return; }
+      pointsOwned -= total;
+      for(let i=0;i<currentQty;i++) experimentData.cart.push(currentProduct);
+      experimentData.cart_history.push({action:'add',name:currentProduct,price:total,remaining_points:pointsOwned,ts:nowISO()});
+      pointsNum.textContent = pointsOwned; cartPointsDisp.textContent = pointsOwned;
+      pointsStatus.textContent = `現在のポイント残高: ${pointsOwned}pt`;
+      refreshCartUI();
       alert(`${currentProduct} を ${currentQty} 個カートに追加しました。\n残りポイント：${pointsOwned}pt`);
       closeDetail();
+      pushEvent('cart_add',{product:currentProduct,qty:currentQty,total});
     });
 
     detailCloseBtn.addEventListener('click',closeDetail);
@@ -937,8 +837,6 @@
             const price = getProductPrice(name);
             pointsOwned += price;
             experimentData.cart.splice(idx,1);
-            const pos = experimentData.purchase_order_titles.indexOf(name);
-            if(pos !== -1) experimentData.purchase_order_titles.splice(pos,1);
             experimentData.cart_history.push({action:'remove',name,price,remaining_points:pointsOwned,ts:nowISO()});
             pointsNum.textContent = pointsOwned; cartPointsDisp.textContent = pointsOwned;
             refreshCartUI();
@@ -1011,22 +909,13 @@
         q1: rv('q1'),
         q2_1: rv('q2_1'), q2_2: rv('q2_2'), q2_3: rv('q2_3'), q2_4: rv('q2_4'), q2_5: rv('q2_5'),
         q3_1: rv('q3_1'), q3_2: rv('q3_2'), q3_3: rv('q3_3'), q3_4: rv('q3_4'), q3_5: rv('q3_5'),
-        q4: rv('q4'),
-        q5_1: rv('q5_1'), q5_2: rv('q5_2'), q5_3: rv('q5_3'), q5_4: rv('q5_4'), q5_5: rv('q5_5'),
-        q6: rv('q6')
+        q4: rv('q4')
       };
       if(!Object.values(survey).every(v=>v!=='')){ alert('すべての項目に回答してください。'); return; }
 
       experimentData.survey = survey;
       experimentData.end_time_iso = nowISO();
       pushEvent('survey_submitted',{survey});
-
-      // 1冊目・2冊目のタイトルと詳細閲覧秒（未閲覧は0、2冊目未購入は0）
-      const firstTitle = experimentData.purchase_order_titles[0] || 0;
-      const secondTitle = experimentData.purchase_order_titles[1] || 0;
-
-      const firstSec = firstTitle ? (experimentData.product_view_times_s[firstTitle] || 0) : 0;
-      const secondSec = secondTitle ? (experimentData.product_view_times_s[secondTitle] || 0) : 0;
 
       const dataToSend = {
         participant_id: experimentData.participant_id,
@@ -1037,10 +926,6 @@
         customer_gender: experimentData.customer.gender,
         customer_age: experimentData.customer.age,
         purchases: experimentData.purchases.join(', '),
-        purchase_1_title: firstTitle,
-        purchase_1_detail_view_s: firstSec,
-        purchase_2_title: secondTitle,
-        purchase_2_detail_view_s: secondSec,
         click_count: experimentData.click_count,
         ...survey
       };
