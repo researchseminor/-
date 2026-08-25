@@ -224,7 +224,15 @@
 
     @media (max-width:720px){
       .categories{grid-template-columns:1fr}
-      .product-grid{grid-template-columns:1fr}
+
+      /* スマホで商品写真を小さく */
+      .product-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+      .product-card{padding:6px;gap:5px}
+      .product-thumb{aspect-ratio:4/3;} /* 1:1 -> 4:3 で高さを抑える */
+      .product-name{font-size:12px;line-height:1.3}
+      .product-price{font-size:12px}
+      .btn-detail-inline,.btn-add-inline{padding:6px 8px;font-size:12px}
+
       .sd-scale-wrap{grid-template-columns:1fr;gap:4px}
       .sd-scale-wrap .sd-left,.sd-scale-wrap .sd-right{display:none}
       .sd-scale-wrap::before{
@@ -484,31 +492,26 @@
       '『雨音を数える』':'眠れない夜に雨音を数えることを習慣にしている青年。ある出来事をきっかけに、忘れたと思っていた家族との記憶が少しずつ蘇っていく。',
       '『遠い灯りの向こう側』':'海辺の小さな町で暮らす少女と、町を出ることを決めた父親。離れていく二人の視点から、「帰る場所」とは何かを描く。',
       '『静かな人たち』':'同じアパートに暮らす、互いに名前も知らない住人たち。それぞれの小さな人生が、ある一つの出来事をきっかけに交差していく。',
-
       '『七番目の空室』':'十二室あるホテルで、なぜか「七号室」だけが存在しない。ホテルを訪れた探偵は、過去の宿泊記録に残された奇妙な共通点に気づく。',
       '『消えた午後三時』':'町の時計が一斉に午後三時を示した瞬間、住民の一人が姿を消した。しかし、その人物が消えたことを覚えている者は誰もいなかった。',
       '『逆さまの手紙』':'亡くなった祖父の遺品から、上下逆さまに書かれた一通の手紙が見つかる。そこに隠された暗号を解くにつれ、家族が長年隠してきた事件が明らかになる。',
       '『最後に傘を閉じた人』':'雨の日にだけ現れる謎の目撃者が、三つの事件に共通して登場していた。刑事は証言を追ううちに、事件そのものより奇妙な「目撃者の正体」に迫っていく。',
       '『誰も読まなかった議事録』':'小さな会社で起きた失踪事件を調べるため、過去の社内議事録が集められる。誰にも読まれていなかった一枚の記録が、事件の真相を示していた。',
-
       '『君と違う駅で降りる』':'同じ電車に乗る二人は、毎朝顔を合わせながら一度も話したことがない。ある朝、偶然の出来事から始まった会話が、二人の日常を少しずつ変えていく。',
       '『返信のない午後』':'突然連絡を返さなくなった恋人を待ちながら、主人公は過去のメッセージを読み返す。そこに残された言葉から、二人の関係を見つめ直していく。',
       '『春になるまで待って』':'遠距離恋愛を始めた二人が、「春になったら一緒に暮らす」という約束をする。しかし、時間が経つにつれて、それぞれの未来に別の選択肢が現れる。',
       '『好きになる前の話』':'幼なじみだった二人が、大学進学をきっかけに初めて互いを異性として意識する。「いつから好きだったのか」を振り返りながら進む青春恋愛小説。',
       '『午前0時の待ち合わせ』':'毎月一度、誰にも場所を教えず同じ公園で会う二人。秘密を抱えたまま続く関係の中で、二人は本当の気持ちを伝える決心をする。',
-
       '『三階には誰も住んでいない』':'引っ越したアパートには、住人が一人もいないはずの三階があった。しかし毎晩決まった時間になると、上から誰かが歩く音が聞こえてくる。',
       '『母から届いた留守番電話』':'数年前に亡くなった母親から、突然スマートフォンに留守番電話が届く。再生するたびに、録音された声が少しずつ現在の出来事を語り始める。',
       '『写真の中だけ雨が降る』':'古いアルバムにある写真では、どの場所にも雨が降っていた。調べていくうちに、写真が撮影された場所では必ず誰かが行方不明になっていることが判明する。',
       '『午前二時のエレベーター』':'マンションのエレベーターには、午前二時だけ存在しない階へのボタンが現れる。好奇心からその階へ向かった主人公は、自分の部屋とまったく同じ部屋を見つける。',
       '『隣の部屋の拍手』':'深夜になると、壁の向こうから一定の間隔で拍手が聞こえてくる。隣室は何年も空室のはずだったが、ある夜、拍手に合わせて自分の部屋の照明が点滅し始める。',
-
       '『星をしまう郵便局』':'眠っている間に見た星を、瓶に詰めて保管する不思議な郵便局。新人局員の少女は、誰かの夢から届いた「存在しない星」を巡る事件に巻き込まれる。',
       '『月曜日だけ魔法が使える町』':'この町では、なぜか月曜日にしか魔法を使うことができない。一週間に一度の魔法を使いながら、人々は限られた時間の中で願いを叶えようとする。',
       '『記憶を育てる庭』':'古い庭園には、忘れられた記憶から花を咲かせる木が一本だけ存在する。記憶を失った少年は、自分の過去を取り戻すため庭園を訪れる。',
       '『雲の下の王国』':'空に浮かぶ王国では、地上の人々の「願い」が国を動かす力になっていた。しかし突然、世界中から願いが消え始め、王国そのものが崩れ始める。',
       '『魔法使いの忘れもの』':'一流の魔法使いが旅の途中で、記憶を失った少女と出会う。少女が持っていた小さな鍵が、世界から消えた魔法を取り戻す唯一の手がかりだった。',
-
       '『知らない街で暮らす』':'仕事を辞め、縁もゆかりもない地方都市で一年間暮らした著者の記録。地域の人々との交流を通して、「豊かに暮らすこと」の意味を考える。',
       '『一日一人に話を聞く』':'一年間、毎日一人の知らない人に人生について話を聞いた記録。会社員、学生、職人、経営者など、365人の言葉から現代社会の姿を描く。',
       '『小さな工場の大きな挑戦』':'地方の町工場が、廃業寸前から独自技術を武器に再生していく過程を追う。経営者と従業員への取材を通して、ものづくりの現場と地域産業の未来を考える。',
@@ -524,8 +527,8 @@
       participant_id:(crypto?.randomUUID ? crypto.randomUUID() : `id-${Date.now()}`),
       start_time_iso:null, close_points_time_iso:null, pay_time_iso:null, total_time_ms:null,
       events:[], cart:[], purchases:[], cart_history:[], product_detail_count:0, click_count:0, customer:{}, survey:{},
-      product_view_times_s:{},    // 商品別の累積詳細閲覧秒
-      purchase_order_titles:[]    // 購入順タイトル（1冊目/2冊目抽出用）
+      product_view_times_s:{},
+      purchase_order_titles:[]
     };
 
     const views = { start:document.getElementById('view-start'), shop:document.getElementById('view-shop'), checkout:document.getElementById('view-checkout'), survey:document.getElementById('view-survey') };
@@ -712,7 +715,7 @@
     function startDetailTimer(){
       stopDetailTimer();
       detailOpenEpochMs = Date.now();
-      detailTimerInterval = setInterval(()=>{}, 250); // 表示しないが計測は継続
+      detailTimerInterval = setInterval(()=>{}, 250);
     }
     function stopDetailTimer(){
       if(detailTimerInterval){
@@ -746,11 +749,11 @@
       ],'Q3');
 
       makeMultiScale('q5-group',[
-        {title:'.',left:'重要でない',right:'重要である'},
-        {title:'.',left:'関心がない',right:'関心がある'},
-        {title:'.',left:'大きな意味がある',right:'何の意味もない'},
-        {title:'.',left:'どうでもいい',right:'私にとって大切'},
-        {title:'.',left:'ささいなもの',right:'重大である'}
+        {title:'Q5-1',left:'重要でない',right:'重要である'},
+        {title:'Q5-2',left:'関心がない',right:'関心がある'},
+        {title:'Q5-3',left:'大きな意味がある',right:'何の意味もない'},
+        {title:'Q5-4',left:'どうでもいい',right:'私にとって大切'},
+        {title:'Q5-5',left:'ささいなもの',right:'重大である'}
       ],'Q5');
 
       showView('start');
@@ -1021,10 +1024,8 @@
       experimentData.end_time_iso = nowISO();
       pushEvent('survey_submitted',{survey});
 
-      // 1冊目・2冊目のタイトルと詳細閲覧秒（未閲覧は0、2冊目未購入は0）
       const firstTitle = experimentData.purchase_order_titles[0] || 0;
       const secondTitle = experimentData.purchase_order_titles[1] || 0;
-
       const firstSec = firstTitle ? (experimentData.product_view_times_s[firstTitle] || 0) : 0;
       const secondSec = secondTitle ? (experimentData.product_view_times_s[secondTitle] || 0) : 0;
 
