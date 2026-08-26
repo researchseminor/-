@@ -351,7 +351,7 @@
         <h2>購入後アンケート</h2>
 
         <div class="sd-block">
-          <div class="sd-title">Q1：現在あなたがいる環境は気温・湿度面でどれくらい不快ですか？（不快環境：蒸し暑いなど）</div>
+          <div class="sd-title">Q1：現在あなたがいる環境はどれくらい蒸し暑いと感じますか？</div>
           <div class="sd-scale-wrap" data-mobile-lr="非常に快適 ←→ 非常に不快">
             <div class="sd-left">非常に快適</div>
             <div class="sd-scale" id="q1-scale"></div>
@@ -828,6 +828,9 @@
       pointsStatus.textContent = `現在のポイント残高: ${pointsOwned}pt`;
       refreshCartUI();
       return true;
+      canShowCartButton = true;
+cartButtonAlreadyUsed = false;
+cartFloating.style.display = 'block';
     }
 
     function renderCategories(){
@@ -980,21 +983,61 @@
       cartPointsDisp.textContent = pointsOwned;
     }
 
-    cartFloating.addEventListener('click',()=>{
-      if(!canShowCartButton || cartButtonAlreadyUsed) return;
-      cartButtonAlreadyUsed = true;
-      cartFloating.style.display='none';
-      cartView.style.display='block';
-      refreshCartUI();
-      cartView.scrollIntoView({behavior:'smooth'});
-      pushEvent('open_cart_view');
-    });
+    cartFloating.addEventListener('click', () => {
 
-    backToShopBtn.addEventListener('click',()=>{
-      cartView.style.display='none';
-      cartFloating.style.display='none';
-      pushEvent('back_to_shop');
-    });
+  // カートが空なら何もしない
+  if (experimentData.cart.length === 0) return;
+
+  // すでに確認済みなら何もしない
+  if (cartButtonAlreadyUsed) return;
+
+  // カート確認済みにする
+  cartButtonAlreadyUsed = true;
+
+  // カート確認ボタンを隠す
+  cartFloating.style.display = 'none';
+
+  // カート画面を表示
+  cartView.style.display = 'block';
+
+  // カート内容を更新
+  refreshCartUI();
+
+  // カート画面まで移動
+  cartView.scrollIntoView({
+    behavior: 'smooth'
+  });
+
+  pushEvent('open_cart_view');
+});
+
+   backToShopBtn.addEventListener('click', () => {
+
+  // カート画面を閉じる
+  cartView.style.display = 'none';
+
+  // 「カート確認済み」の状態をリセット
+  // → 再びカート確認ボタンを押せるようにする
+  cartButtonAlreadyUsed = false;
+
+  // カートに商品が残っている場合
+  if (experimentData.cart.length > 0) {
+
+    canShowCartButton = true;
+    cartFloating.style.display = 'block';
+
+  } else {
+
+    canShowCartButton = false;
+    cartFloating.style.display = 'none';
+
+  }
+
+  // カート表示を最新状態にする
+  refreshCartUI();
+
+  pushEvent('back_to_shop');
+});
 
     toCheckoutBtn.addEventListener('click',()=>{
       if(experimentData.cart.length===0){ alert('カートに商品がありません'); return; }
