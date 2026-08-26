@@ -154,16 +154,22 @@
     .product-item{padding:6px 8px;border-bottom:1px dashed rgba(0,0,0,.08);display:flex;justify-content:space-between;align-items:center}
     .product-item:last-child{border-bottom:none}
 
-    .subcat-title{font-weight:700;margin:8px 0 10px}
     .product-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-bottom:8px}
     .product-card{
       border:1px solid #111;border-radius:8px;padding:8px;background:#fff;
       display:flex;flex-direction:column;align-items:stretch;gap:6px;
     }
     .product-thumb{
-      width:100%;aspect-ratio:1/1;border-radius:6px;background:#ddd;background-size:cover;background-position:center;
+      width:100%;
+      aspect-ratio:3/4; /* 縦長に変更 */
+      border-radius:6px;
+      background:#ddd;
+      background-size:cover;
+      background-position:center;
+      background-repeat:no-repeat;
     }
     .product-name{font-size:14px;font-weight:700;line-height:1.4}
+    .product-author{font-size:12px;color:#444;line-height:1.3}
     .product-price{font-size:13px}
     .btn-detail-inline{
       background:#fff;color:#111;border:1px solid #111;border-radius:6px;padding:8px 10px;font-weight:700;
@@ -174,7 +180,7 @@
 
     .modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.45);display:none;align-items:center;justify-content:center;z-index:600}
     .modal{background:#fff;padding:16px;border-radius:8px;width:380px;max-width:90%;border:2px solid #111}
-    .modal-image{width:100%;height:200px;background:var(--color3);border-radius:6px;margin-bottom:12px;background-size:cover;background-position:center;display:flex;align-items:center;justify-content:center;color:#777}
+    .modal-image{width:100%;height:200px;background:var(--color3);border-radius:6px;margin-bottom:12px;background-size:cover;background-position:center;background-repeat:no-repeat;display:flex;align-items:center;justify-content:center;color:#777}
     .quantity-selector{margin-top:12px;display:flex;align-items:center;justify-content:center;gap:10px}
     .quantity-selector button{padding:6px 12px;font-size:16px;min-width:40px}
     .quantity-selector span{font-size:18px;font-weight:700;min-width:40px;text-align:center}
@@ -224,7 +230,14 @@
 
     @media (max-width:720px){
       .categories{grid-template-columns:1fr}
-      .product-grid{grid-template-columns:1fr}
+      .product-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+      .product-card{padding:6px;gap:5px}
+      .product-thumb{aspect-ratio:3/4;}
+      .product-name{font-size:12px;line-height:1.3}
+      .product-author{font-size:11px}
+      .product-price{font-size:12px}
+      .btn-detail-inline,.btn-add-inline{padding:6px 8px;font-size:12px}
+
       .sd-scale-wrap{grid-template-columns:1fr;gap:4px}
       .sd-scale-wrap .sd-left,.sd-scale-wrap .sd-right{display:none}
       .sd-scale-wrap::before{
@@ -265,8 +278,8 @@
             <button class="ecx-arrow ecx-prev" id="ecx-prev" aria-label="前へ">‹</button>
             <div class="ecx-viewport" id="ecx-viewport">
               <div class="ecx-track" id="ecx-track">
-                <div class="ecx-slide"><div class="ecx-card"><img src="images/gazou1.jpg" alt="カルーセル画像1"></div></div>
-                <div class="ecx-slide"><div class="ecx-card"><img src="images/gazou2.jpg" alt="カルーセル画像2"></div></div>
+                <div class="ecx-slide"><div class="ecx-card"><img src="images/gazou4.jpg" alt="カルーセル画像1"></div></div>
+                <div class="ecx-slide"><div class="ecx-card"><img src="images/gazou5.jpg" alt="カルーセル画像2"></div></div>
                 <div class="ecx-slide"><div class="ecx-card"><img src="images/gazou3.jpg" alt="カルーセル画像3"></div></div>
               </div>
             </div>
@@ -386,7 +399,8 @@
          <div class="crowdworks-notice">
           <p class="start-notice-title">♦クラウドワークスから回答の方♦</p>
           <p>クラウドワークスの入力画面に以下の英数字を入力してください。</p>
-          <p class="answer-code">E27fiDh7</p>
+          <p class="answer-code">Hvy24K</p>
+          <p id="participant-id-view" style="margin-top:8px;">個人ID：-</p>
          </div>
       </div>
     </main>
@@ -422,61 +436,82 @@
 
   <script>
     const CATEGORIES = [
-      { id:'literature', name:'文学', imageUrl:'kitchen.jpg', subcategories:[
-        { name:'文学', imageUrl:'sarap.jpg', products:[
-          { name:'『午後四時の窓辺』', price:850, imageUrl:'sara.jpg' },
-          { name:'『名前のない季節』', price:850, imageUrl:'prate.jpg' },
-          { name:'『雨音を数える』', price:850, imageUrl:'kidsp.jpg' },
-          { name:'『遠い灯りの向こう側』', price:850, imageUrl:'magw.jpg' },
-          { name:'『静かな人たち』', price:850, imageUrl:'magb.jpg' }
-        ]}
+      { id:'literature', name:'文学', imageUrl:'bungaku.jpg', products:[
+        { name:'『午後四時の窓辺』', price:850, imageUrl:'gogo4zi(1).jpg' },
+        { name:'『名前のない季節』', price:850, imageUrl:'namaenonai(1).jpg' },
+        { name:'『雨音を数える』', price:850, imageUrl:'amaoto(1).jpg' },
+        { name:'『遠い灯りの向こう側』', price:850, imageUrl:'tooiakari(1).jpg' },
+        { name:'『静かな人たち』', price:850, imageUrl:'shizukana(1).jpg' }
       ]},
-      { id:'mystery', name:'ミステリ', imageUrl:'shuno.jpg', subcategories:[
-        { name:'ミステリ', imageUrl:'tool.jpg', products:[
-          { name:'『七番目の空室』', price:850, imageUrl:'box.jpg' },
-          { name:'『消えた午後三時』', price:850, imageUrl:'busket.jpg' },
-          { name:'『逆さまの手紙』', price:850, imageUrl:'kago.jpg' },
-          { name:'『最後に傘を閉じた人』', price:850, imageUrl:'luckw.jpg' },
-          { name:'『誰も読まなかった議事録』', price:850, imageUrl:'luckb.jpg' }
-        ]}
+      { id:'mystery', name:'ミステリ', imageUrl:'mystery.jpg', products:[
+        { name:'『七番目の空室』', price:850, imageUrl:'7banme(1).jpg' },
+        { name:'『消えた午後三時』', price:850, imageUrl:'kietagogo(1).jpg' },
+        { name:'『逆さまの手紙』', price:850, imageUrl:'sakasama(1).jpg' },
+        { name:'『最後に傘を閉じた人』', price:850, imageUrl:'saigonikasa(1).jpg' },
+        { name:'『誰も読まなかった議事録』', price:850, imageUrl:'daremo(1).jpg' }
       ]},
-      { id:'romance', name:'恋愛', imageUrl:'interia.jpg', subcategories:[
-        { name:'恋愛', imageUrl:'tool.jpg', products:[
-          { name:'『君と違う駅で降りる』', price:850, imageUrl:'katenw.jpg' },
-          { name:'『返信のない午後』', price:850, imageUrl:'kateng.jpg' },
-          { name:'『春になるまで待って』', price:850, imageUrl:'tokeiw.jpg' },
-          { name:'『好きになる前の話』', price:850, imageUrl:'tokeib.jpg' },
-          { name:'『午前0時の待ち合わせ』', price:850, imageUrl:'belt.jpg' }
-        ]}
+      { id:'romance', name:'恋愛', imageUrl:'renai.jpg', products:[
+        { name:'『君と違う駅で降りる』', price:850, imageUrl:'kimito(1).jpg' },
+        { name:'『返信のない午後』', price:850, imageUrl:'henshin(1).jpg' },
+        { name:'『春になるまで待って』', price:850, imageUrl:'haruni(1).jpg' },
+        { name:'『好きになる前の話』', price:850, imageUrl:'sukini(1).jpg' },
+        { name:'『午前0時の待ち合わせ』', price:850, imageUrl:'gozen0(1).jpg' }
       ]},
-      { id:'horror', name:'ホラー', imageUrl:'fashion.jpg', subcategories:[
-        { name:'ホラー', imageUrl:'tool.jpg', products:[
-          { name:'『三階には誰も住んでいない』', price:850, imageUrl:'sunglass.jpg' },
-          { name:'『母から届いた留守番電話』', price:850, imageUrl:'megane.jpg' },
-          { name:'『写真の中だけ雨が降る』', price:850, imageUrl:'cap.jpg' },
-          { name:'『午前二時のエレベーター』', price:850, imageUrl:'mask.jpg' },
-          { name:'『隣の部屋の拍手』', price:850, imageUrl:'kasa.jpg' }
-        ]}
+      { id:'horror', name:'ホラー', imageUrl:'hola.jpg', products:[
+        { name:'『三階には誰も住んでいない』', price:850, imageUrl:'3kai(1).jpg' },
+        { name:'『母から届いた留守番電話』', price:850, imageUrl:'hahakara(1).jpg' },
+        { name:'『写真の中だけ雨が降る』', price:850, imageUrl:'shashin(1).jpg' },
+        { name:'『午前二時のエレベーター』', price:850, imageUrl:'gozen2(1).jpg' },
+        { name:'『隣の部屋の拍手』', price:850, imageUrl:'tonarino(1).jpg' }
       ]},
-      { id:'fantasy', name:'ファンタジー', imageUrl:'device.jpg', subcategories:[
-        { name:'ファンタジー', imageUrl:'tool.jpg', products:[
-          { name:'『星をしまう郵便局』', price:850, imageUrl:'tan3.jpg' },
-          { name:'『月曜日だけ魔法が使える町』', price:850, imageUrl:'botan.jpg' },
-          { name:'『記憶を育てる庭』', price:850, imageUrl:'lightw.jpg' },
-          { name:'『雲の下の王国』', price:850, imageUrl:'lightb.jpg' },
-          { name:'『魔法使いの忘れもの』', price:850, imageUrl:'lampshade.jpg' }
-        ]}
+      { id:'fantasy', name:'ファンタジー', imageUrl:'fantasy.jpg', products:[
+        { name:'『星をしまう郵便局』', price:850, imageUrl:'hoshi(1).jpg' },
+        { name:'『月曜日だけ魔法が使える町』', price:850, imageUrl:'getsuyoubi(1).jpg' },
+        { name:'『記憶を育てる庭』', price:850, imageUrl:'kioku(1).jpg' },
+        { name:'『雲の下の王国』', price:850, imageUrl:'kumono(1).jpg' },
+        { name:'『魔法使いの忘れもの』', price:850, imageUrl:'mahou(1).jpg' }
       ]},
-      { id:'nonfiction', name:'ノンフィクション', imageUrl:'kitchen.jpg', subcategories:[
-        { name:'ノンフィクション', imageUrl:'tool.jpg', products:[
-          { name:'『知らない街で暮らす』', price:850, imageUrl:'yusenw.jpg' },
-          { name:'『一日一人に話を聞く』', price:850, imageUrl:'bluetoothw.jpg' },
-          { name:'『小さな工場の大きな挑戦』', price:850, imageUrl:'headphonew.jpg' },
-          { name:'『数字のない一週間』', price:850, imageUrl:'coin.jpg' },
-          { name:'『最後の一席を守る人』', price:850, imageUrl:'pouch.jpg' }
-        ]}
+      { id:'nonfiction', name:'ノンフィクション', imageUrl:'nonfiction.jpg', products:[
+        { name:'『知らない街で暮らす』', price:850, imageUrl:'shiranai(1).jpg' },
+        { name:'『一日一人に話を聞く』', price:850, imageUrl:'ichinichi(1).jpg' },
+        { name:'『小さな工場の大きな挑戦』', price:850, imageUrl:'chiisana(1).jpg' },
+        { name:'『数字のない一週間』', price:850, imageUrl:'suuzi(1).jpg' },
+        { name:'『最後の一席を守る人』', price:850, imageUrl:'saigono(1).jpg' }
       ]}
     ];
+
+    const PRODUCT_AUTHORS = {
+      '『午後四時の窓辺』':'水野 朔也',
+      '『名前のない季節』':'小川 澄乃',
+      '『雨音を数える』':'朝倉 湊',
+      '『遠い灯りの向こう側』':'高瀬 千景',
+      '『静かな人たち』':'森崎 透',
+      '『七番目の空室』':'黒瀬 恒一',
+      '『消えた午後三時』':'相馬 怜',
+      '『逆さまの手紙』':'榊原 真琴',
+      '『最後に傘を閉じた人』':'藤堂 恒一',
+      '『誰も読まなかった議事録』':'白石 直人',
+      '『君と違う駅で降りる』':'青木 莉子',
+      '『返信のない午後』':'西園寺 由良',
+      '『春になるまで待って』':'橘 美月',
+      '『好きになる前の話』':'長谷川 結衣',
+      '『午前0時の待ち合わせ』':'神谷 凪',
+      '『三階には誰も住んでいない』':'御影 玄',
+      '『母から届いた留守番電話』':'久世 依子',
+      '『写真の中だけ雨が降る』':'鳴海 彼方',
+      '『午前二時のエレベーター』':'夜久 玲司',
+      '『隣の部屋の拍手』':'雨宮 深雪',
+      '『星をしまう郵便局』':'星野 つむぎ',
+      '『月曜日だけ魔法が使える町』':'L. Arlen',
+      '『記憶を育てる庭』':'天城 紗良',
+      '『雲の下の王国』':'空木 玲',
+      '『魔法使いの忘れもの』':'七瀬 灯',
+      '『知らない街で暮らす』':'三浦 恒一',
+      '『一日一人に話を聞く』':'佐伯 遥',
+      '『小さな工場の大きな挑戦』':'井上 朝',
+      '『数字のない一週間』':'松本 亮',
+      '『最後の一席を守る人』':'田辺 賢'
+    };
 
     const PRODUCT_DESCRIPTIONS = {
       '『午後四時の窓辺』':'誰にも言えない過去を抱えた三人が、同じ町で静かに暮らしている。何気ない日常の中に、それぞれの人生の選択と後悔が浮かび上がっていく。',
@@ -484,31 +519,26 @@
       '『雨音を数える』':'眠れない夜に雨音を数えることを習慣にしている青年。ある出来事をきっかけに、忘れたと思っていた家族との記憶が少しずつ蘇っていく。',
       '『遠い灯りの向こう側』':'海辺の小さな町で暮らす少女と、町を出ることを決めた父親。離れていく二人の視点から、「帰る場所」とは何かを描く。',
       '『静かな人たち』':'同じアパートに暮らす、互いに名前も知らない住人たち。それぞれの小さな人生が、ある一つの出来事をきっかけに交差していく。',
-
       '『七番目の空室』':'十二室あるホテルで、なぜか「七号室」だけが存在しない。ホテルを訪れた探偵は、過去の宿泊記録に残された奇妙な共通点に気づく。',
       '『消えた午後三時』':'町の時計が一斉に午後三時を示した瞬間、住民の一人が姿を消した。しかし、その人物が消えたことを覚えている者は誰もいなかった。',
       '『逆さまの手紙』':'亡くなった祖父の遺品から、上下逆さまに書かれた一通の手紙が見つかる。そこに隠された暗号を解くにつれ、家族が長年隠してきた事件が明らかになる。',
       '『最後に傘を閉じた人』':'雨の日にだけ現れる謎の目撃者が、三つの事件に共通して登場していた。刑事は証言を追ううちに、事件そのものより奇妙な「目撃者の正体」に迫っていく。',
       '『誰も読まなかった議事録』':'小さな会社で起きた失踪事件を調べるため、過去の社内議事録が集められる。誰にも読まれていなかった一枚の記録が、事件の真相を示していた。',
-
       '『君と違う駅で降りる』':'同じ電車に乗る二人は、毎朝顔を合わせながら一度も話したことがない。ある朝、偶然の出来事から始まった会話が、二人の日常を少しずつ変えていく。',
       '『返信のない午後』':'突然連絡を返さなくなった恋人を待ちながら、主人公は過去のメッセージを読み返す。そこに残された言葉から、二人の関係を見つめ直していく。',
       '『春になるまで待って』':'遠距離恋愛を始めた二人が、「春になったら一緒に暮らす」という約束をする。しかし、時間が経つにつれて、それぞれの未来に別の選択肢が現れる。',
       '『好きになる前の話』':'幼なじみだった二人が、大学進学をきっかけに初めて互いを異性として意識する。「いつから好きだったのか」を振り返りながら進む青春恋愛小説。',
       '『午前0時の待ち合わせ』':'毎月一度、誰にも場所を教えず同じ公園で会う二人。秘密を抱えたまま続く関係の中で、二人は本当の気持ちを伝える決心をする。',
-
       '『三階には誰も住んでいない』':'引っ越したアパートには、住人が一人もいないはずの三階があった。しかし毎晩決まった時間になると、上から誰かが歩く音が聞こえてくる。',
       '『母から届いた留守番電話』':'数年前に亡くなった母親から、突然スマートフォンに留守番電話が届く。再生するたびに、録音された声が少しずつ現在の出来事を語り始める。',
       '『写真の中だけ雨が降る』':'古いアルバムにある写真では、どの場所にも雨が降っていた。調べていくうちに、写真が撮影された場所では必ず誰かが行方不明になっていることが判明する。',
       '『午前二時のエレベーター』':'マンションのエレベーターには、午前二時だけ存在しない階へのボタンが現れる。好奇心からその階へ向かった主人公は、自分の部屋とまったく同じ部屋を見つける。',
       '『隣の部屋の拍手』':'深夜になると、壁の向こうから一定の間隔で拍手が聞こえてくる。隣室は何年も空室のはずだったが、ある夜、拍手に合わせて自分の部屋の照明が点滅し始める。',
-
       '『星をしまう郵便局』':'眠っている間に見た星を、瓶に詰めて保管する不思議な郵便局。新人局員の少女は、誰かの夢から届いた「存在しない星」を巡る事件に巻き込まれる。',
       '『月曜日だけ魔法が使える町』':'この町では、なぜか月曜日にしか魔法を使うことができない。一週間に一度の魔法を使いながら、人々は限られた時間の中で願いを叶えようとする。',
       '『記憶を育てる庭』':'古い庭園には、忘れられた記憶から花を咲かせる木が一本だけ存在する。記憶を失った少年は、自分の過去を取り戻すため庭園を訪れる。',
       '『雲の下の王国』':'空に浮かぶ王国では、地上の人々の「願い」が国を動かす力になっていた。しかし突然、世界中から願いが消え始め、王国そのものが崩れ始める。',
       '『魔法使いの忘れもの』':'一流の魔法使いが旅の途中で、記憶を失った少女と出会う。少女が持っていた小さな鍵が、世界から消えた魔法を取り戻す唯一の手がかりだった。',
-
       '『知らない街で暮らす』':'仕事を辞め、縁もゆかりもない地方都市で一年間暮らした著者の記録。地域の人々との交流を通して、「豊かに暮らすこと」の意味を考える。',
       '『一日一人に話を聞く』':'一年間、毎日一人の知らない人に人生について話を聞いた記録。会社員、学生、職人、経営者など、365人の言葉から現代社会の姿を描く。',
       '『小さな工場の大きな挑戦』':'地方の町工場が、廃業寸前から独自技術を武器に再生していく過程を追う。経営者と従業員への取材を通して、ものづくりの現場と地域産業の未来を考える。',
@@ -524,8 +554,8 @@
       participant_id:(crypto?.randomUUID ? crypto.randomUUID() : `id-${Date.now()}`),
       start_time_iso:null, close_points_time_iso:null, pay_time_iso:null, total_time_ms:null,
       events:[], cart:[], purchases:[], cart_history:[], product_detail_count:0, click_count:0, customer:{}, survey:{},
-      product_view_times_s:{},    // 商品別の累積詳細閲覧秒
-      purchase_order_titles:[]    // 購入順タイトル（1冊目/2冊目抽出用）
+      product_view_times_s:{},
+      purchase_order_titles:[]
     };
 
     const views = { start:document.getElementById('view-start'), shop:document.getElementById('view-shop'), checkout:document.getElementById('view-checkout'), survey:document.getElementById('view-survey') };
@@ -562,6 +592,7 @@
     const payBtn = document.getElementById('pay-btn');
     const submitSurveyBtn = document.getElementById('submit-survey');
     const finalMsg = document.getElementById('final-msg');
+    const participantIdView = document.getElementById('participant-id-view');
 
     let pointsOwned = 0, hasStarted = false, currentProduct = null, currentProductPrice = 0, currentQty = 1;
     let canShowCartButton = false, cartButtonAlreadyUsed = false;
@@ -576,7 +607,7 @@
       pointsDisplay.style.display = (name === 'start') ? 'none' : 'block';
     }
     function getProductPrice(name){
-      for (const c of CATEGORIES) for (const s of c.subcategories||[]) for (const p of s.products||[]) if (p.name===name) return p.price;
+      for (const c of CATEGORIES) for (const p of c.products||[]) if (p.name===name) return p.price;
       return 0;
     }
     function calcCartTotal(){ return experimentData.cart.reduce((sum,n)=>sum+getProductPrice(n),0); }
@@ -712,7 +743,7 @@
     function startDetailTimer(){
       stopDetailTimer();
       detailOpenEpochMs = Date.now();
-      detailTimerInterval = setInterval(()=>{}, 250); // 表示しないが計測は継続
+      detailTimerInterval = setInterval(()=>{}, 250);
     }
     function stopDetailTimer(){
       if(detailTimerInterval){
@@ -725,6 +756,8 @@
       pointsNum.textContent = 0;
       cartPointsDisp.textContent = 0;
       pointsAmount.textContent = INITIAL_POINTS;
+      participantIdView.textContent = `個人ID：${experimentData.participant_id}`;
+
       make7Scale('q1-scale','q1');
       make7Scale('q4-scale','q4');
       make7Scale('q6-scale','q6');
@@ -807,61 +840,58 @@
         if(cat.imageUrl) img.style.backgroundImage = `url('images/${cat.imageUrl}')`;
 
         const prodDiv = card.querySelector('.cat-products');
+        const grid = document.createElement('div');
+        grid.className = 'product-grid';
 
-        (cat.subcategories||[]).forEach(sub=>{
-          const subTitle = document.createElement('div');
-          subTitle.className = 'subcat-title';
-          subTitle.textContent = sub.name;
-          prodDiv.appendChild(subTitle);
+        (cat.products||[]).forEach(p=>{
+          const pCard = document.createElement('div');
+          pCard.className = 'product-card';
 
-          const grid = document.createElement('div');
-          grid.className = 'product-grid';
+          const thumb = document.createElement('div');
+          thumb.className = 'product-thumb';
+          if(p.imageUrl) thumb.style.backgroundImage = `url('images/${p.imageUrl}')`;
 
-          (sub.products||[]).forEach(p=>{
-            const pCard = document.createElement('div');
-            pCard.className = 'product-card';
+          const name = document.createElement('div');
+          name.className = 'product-name';
+          name.textContent = p.name;
 
-            const thumb = document.createElement('div');
-            thumb.className = 'product-thumb';
-            if(p.imageUrl) thumb.style.backgroundImage = `url('images/${p.imageUrl}')`;
+          const author = document.createElement('div');
+          author.className = 'product-author';
+          author.textContent = `著者：${PRODUCT_AUTHORS[p.name] || '不明'}`;
 
-            const name = document.createElement('div');
-            name.className = 'product-name';
-            name.textContent = p.name;
+          const price = document.createElement('div');
+          price.className = 'product-price';
+          price.textContent = `${p.price}円`;
 
-            const price = document.createElement('div');
-            price.className = 'product-price';
-            price.textContent = `${p.price}円`;
-
-            const detailBtn = document.createElement('button');
-            detailBtn.type = 'button';
-            detailBtn.className = 'btn-detail-inline';
-            detailBtn.textContent = '詳細';
-            detailBtn.addEventListener('click',(e)=>{
-              e.stopPropagation();
-              openDetail(p);
-            });
-
-            const addBtn = document.createElement('button');
-            addBtn.type = 'button';
-            addBtn.className = 'btn-add-inline';
-            addBtn.textContent = 'カートに追加';
-            addBtn.addEventListener('click',(e)=>{
-              e.stopPropagation();
-              const ok = addToCartByProduct(p, 1);
-              if(ok) alert(`${p.name} をカートに追加しました。\n残りポイント：${pointsOwned}pt`);
-            });
-
-            pCard.appendChild(thumb);
-            pCard.appendChild(name);
-            pCard.appendChild(price);
-            pCard.appendChild(detailBtn);
-            pCard.appendChild(addBtn);
-            grid.appendChild(pCard);
+          const detailBtn = document.createElement('button');
+          detailBtn.type = 'button';
+          detailBtn.className = 'btn-detail-inline';
+          detailBtn.textContent = '詳細';
+          detailBtn.addEventListener('click',(e)=>{
+            e.stopPropagation();
+            openDetail(p);
           });
 
-          prodDiv.appendChild(grid);
+          const addBtn = document.createElement('button');
+          addBtn.type = 'button';
+          addBtn.className = 'btn-add-inline';
+          addBtn.textContent = 'カートに追加';
+          addBtn.addEventListener('click',(e)=>{
+            e.stopPropagation();
+            const ok = addToCartByProduct(p, 1);
+            if(ok) alert(`${p.name} をカートに追加しました。\n残りポイント：${pointsOwned}pt`);
+          });
+
+          pCard.appendChild(thumb);
+          pCard.appendChild(name);
+          pCard.appendChild(author);
+          pCard.appendChild(price);
+          pCard.appendChild(detailBtn);
+          pCard.appendChild(addBtn);
+          grid.appendChild(pCard);
         });
+
+        prodDiv.appendChild(grid);
 
         card.addEventListener('click',()=>{ prodDiv.style.display = (prodDiv.style.display==='block') ? 'none' : 'block'; });
         categoriesDiv.appendChild(card);
@@ -1015,18 +1045,25 @@
         q5_1: rv('q5_1'), q5_2: rv('q5_2'), q5_3: rv('q5_3'), q5_4: rv('q5_4'), q5_5: rv('q5_5'),
         q6: rv('q6')
       };
+
       if(!Object.values(survey).every(v=>v!=='')){ alert('すべての項目に回答してください。'); return; }
 
       experimentData.survey = survey;
       experimentData.end_time_iso = nowISO();
       pushEvent('survey_submitted',{survey});
 
-      // 1冊目・2冊目のタイトルと詳細閲覧秒（未閲覧は0、2冊目未購入は0）
       const firstTitle = experimentData.purchase_order_titles[0] || 0;
       const secondTitle = experimentData.purchase_order_titles[1] || 0;
-
       const firstSec = firstTitle ? (experimentData.product_view_times_s[firstTitle] || 0) : 0;
       const secondSec = secondTitle ? (experimentData.product_view_times_s[secondTitle] || 0) : 0;
+
+      const purchasedSet = new Set(experimentData.cart);
+      let viewed_not_in_cart_s = 0;
+      Object.keys(experimentData.product_view_times_s).forEach(title=>{
+        if(!purchasedSet.has(title)){
+          viewed_not_in_cart_s += (experimentData.product_view_times_s[title] || 0);
+        }
+      });
 
       const dataToSend = {
         participant_id: experimentData.participant_id,
@@ -1041,11 +1078,16 @@
         purchase_1_detail_view_s: firstSec,
         purchase_2_title: secondTitle,
         purchase_2_detail_view_s: secondSec,
+        viewed_not_in_cart_s: viewed_not_in_cart_s,
         click_count: experimentData.click_count,
         ...survey
       };
 
-      function done(){ document.getElementById('view-survey').classList.remove('active'); finalMsg.style.display = 'block'; }
+      function done(){
+        document.getElementById('view-survey').classList.remove('active');
+        finalMsg.style.display = 'block';
+        participantIdView.textContent = `個人ID：${experimentData.participant_id}`;
+      }
 
       if(ENABLE_SHEET_SYNC){
         submitSurveyBtn.disabled = true;
